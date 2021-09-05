@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { ReactNode } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, GestureResponderEvent } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,16 +7,26 @@ import Login from './screens/Login';
 import Home from './screens/Home';
 import Account from './screens/Account';
 import NewBet from './screens/NewBet';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 export default function App() {
   const RootStack = createNativeStackNavigator();
   const Tabs = createBottomTabNavigator();
 
-  const CustomBetButton = ({ children, onPress }: any) => (
-    <TouchableOpacity onPress={onPress} style={{ top: -20, justifyContent: 'center', alignItems: 'center' }}>
+  const CustomBetButton = ({ children, onPress }: { children: ReactNode, onPress?: ((e: GestureResponderEvent | React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void) | undefined}) => (
+    <TouchableOpacity activeOpacity={.8} onPress={onPress} style={{ top: -20, justifyContent: 'center', alignItems: 'center' }}>
       <View style={{ width: 90, height: 90, borderWidth: 5, borderColor: '#fff', elevation: 10, backgroundColor: '#B5C300', padding: 15, borderRadius: 50 }}>{children}</View>
     </TouchableOpacity>
+  );
+
+  const HeaderTitle = () => (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+      <View style={{ alignItems: 'center', paddingBottom: 15 }}>
+        <Text style={{ color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>TGL</Text>
+        <View style={{ width: 70, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
+      </View>
+      <MaterialIcons name='logout' size={30} color='#C1C1C1' style={{ paddingBottom: 10 }} />
+    </View>
   );
   
   const TabScreens = () => (
@@ -28,7 +38,7 @@ export default function App() {
           <MaterialCommunityIcons name='home-outline' size={35} color={focused ? '#B5C401' : '#C1C1C1'} />
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Home</Text>
         </View>
-      ) }} />
+      ), headerTitle: () => (<HeaderTitle />) }} />
       <Tabs.Screen 
       name='Newbet' 
       component={NewBet} 
