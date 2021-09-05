@@ -6,12 +6,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from './screens/Login';
 import Home from './screens/Home';
 import Account from './screens/Account';
-import NewBet from './screens/NewBet';
+import NewBetCart from './screens/NewBet';
+import Cart from './components/Cart';
 import { MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 export default function App() {
   const RootStack = createNativeStackNavigator();
   const Tabs = createBottomTabNavigator();
+  const Drawer = createDrawerNavigator();
 
   const CustomBetButton = ({ children, onPress }: { children: ReactNode, onPress?: ((e: GestureResponderEvent | React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void) | undefined}) => (
     <TouchableOpacity activeOpacity={.8} onPress={onPress} style={{ top: -20, justifyContent: 'center', alignItems: 'center' }}>
@@ -28,6 +31,12 @@ export default function App() {
       <MaterialIcons name='logout' size={30} color='#C1C1C1' style={{ paddingBottom: 10 }} />
     </View>
   );
+
+  const CartScreen = () => (
+    <Drawer.Navigator>
+      <Drawer.Screen name='Cart' component={Cart} />
+    </Drawer.Navigator>
+  );
   
   const TabScreens = () => (
     <Tabs.Navigator screenOptions={{ 
@@ -41,7 +50,7 @@ export default function App() {
       ), headerTitle: () => (<HeaderTitle />) }} />
       <Tabs.Screen 
       name='Newbet' 
-      component={NewBet} 
+      component={NewBetCart} 
       options={{ tabBarIcon: () => (
           <Image source={require('./assets/newbeticon.png')} style={{ width: 55, height: 55 }} resizeMode='contain' />
       ), 
@@ -58,9 +67,10 @@ export default function App() {
   );
 
   const RootStackScreens = () => (
-    <RootStack.Navigator initialRouteName='Home'>
+    <RootStack.Navigator>
       <RootStack.Screen name='Login' component={Login} options={{ headerShown: false }} />
-      <RootStack.Screen name='Home' component={TabScreens} options={{ headerShown: false }} />
+      <RootStack.Screen name='HomeTabs' component={TabScreens} options={{ headerShown: false }} />
+      <RootStack.Screen name='Cart' component={CartScreen} options={{ headerShown: false }} />
     </RootStack.Navigator>
   );
 

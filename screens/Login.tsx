@@ -11,6 +11,8 @@ type Ref = {
 
 type RootStackParamList = {
     Home: undefined;
+    HomeTabs: undefined;
+    Newbet: undefined;
 };
 
 interface Styles {
@@ -48,7 +50,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                 <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
                 <TextInput placeholder='Password' style={styles.input} secureTextEntry={true} />
                 <Text style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }}>I forget my password</Text>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
                         <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
