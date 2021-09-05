@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -12,6 +12,12 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 export default function App() {
   const RootStack = createNativeStackNavigator();
   const Tabs = createBottomTabNavigator();
+
+  const CustomBetButton = ({ children, onPress }: any) => (
+    <TouchableOpacity onPress={onPress} style={{ top: -20, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ width: 90, height: 90, borderWidth: 5, borderColor: '#fff', elevation: 10, backgroundColor: '#B5C300', padding: 15, borderRadius: 50 }}>{children}</View>
+    </TouchableOpacity>
+  );
   
   const TabScreens = () => (
     <Tabs.Navigator screenOptions={{ 
@@ -23,11 +29,13 @@ export default function App() {
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Home</Text>
         </View>
       ) }} />
-      <Tabs.Screen name='Newbet' component={NewBet} options={{ tabBarIcon: ({ focused }) => (
-        <View style={{ marginBottom: 50, borderWidth: 5, borderColor: '#fff', elevation: 10, backgroundColor: '#B5C300', padding: 15, borderRadius: 100 }}>
-          <Image source={require('./assets/newbeticon.png')} style={{ width: 55, height: 55 }} />
-        </View>
-      ) }} />
+      <Tabs.Screen 
+      name='Newbet' 
+      component={NewBet} 
+      options={{ tabBarIcon: ({ focused }) => (
+          <Image source={require('./assets/newbeticon.png')} style={{ width: 55, height: 55 }} resizeMode='contain' />
+      ), 
+      tabBarButton: (props) => (<CustomBetButton {...props} />)}} />
       <Tabs.Screen name='Account' component={Account} options={{ tabBarIcon: ({ focused }) => (
         <View style={{ alignItems: 'center' }}>
           <Ionicons name='person-outline' size={30} color={focused ? '#B5C401' : '#C1C1C1'} />
