@@ -42,16 +42,18 @@ export default function App() {
       <Tabs.Screen 
       name='Newbet' 
       component={NewBet} 
-      options={{ tabBarIcon: ({ focused }) => (
+      options={{ tabBarIcon: () => (
           <Image source={require('./assets/newbeticon.png')} style={{ width: 55, height: 55 }} resizeMode='contain' />
       ), 
-      tabBarButton: (props) => (<CustomBetButton {...props} />)}} />
+      tabBarButton: (props) => (<CustomBetButton {...props} />), 
+      headerTitle: () => (<HeaderTitle />)}} />
       <Tabs.Screen name='Account' component={Account} options={{ tabBarIcon: ({ focused }) => (
         <View style={{ alignItems: 'center' }}>
           <Ionicons name='person-outline' size={30} color={focused ? '#B5C401' : '#C1C1C1'} />
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Account</Text>
         </View>
-      ) }} />
+      ), 
+      headerTitle: () => (<HeaderTitle />) }} />
     </Tabs.Navigator>
   );
 
@@ -71,6 +73,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   label: {
+    fontSize: 16,
     color: '#C1C1C1',
     fontStyle: 'italic',
   },
