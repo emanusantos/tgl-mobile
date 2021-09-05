@@ -1,22 +1,27 @@
 import React, { useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Animatable from 'react-native-animatable';
 
 type Ref = {
     animate: (name: string, timer: number) => void;
-}
+};
+
+type RootStackParamList = {
+    Home: undefined;
+};
 
 interface Styles {
     opacity: number;
     elevation: number;
-}
+};
 
-export default function Login() {
+export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) {
     const [style, setStyle] = useState<Styles>({ opacity: .5, elevation: 0 });
-    const imgRef = useRef<any>(null);
-    const animationEnd = () => {
+    const imgRef = useRef<Image & Ref>(null);
+    const animationEnd = (): void => {
         setTimeout(() => {
             setStyle({ opacity: 1, elevation: 8 });
             imgRef.current!.animate('fadeOutUpBig', 1000);
@@ -43,7 +48,7 @@ export default function Login() {
                 <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
                 <TextInput placeholder='Password' style={styles.input} secureTextEntry={true} />
                 <Text style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }}>I forget my password</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
                         <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
