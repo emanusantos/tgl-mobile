@@ -39,8 +39,8 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>) {
 };
 
 const NewBetCart = () => (
-    <cartDrawer.Navigator drawerContent={Cart} screenOptions={{ drawerStyle: { width: '60%', borderRadius: 20 }, drawerPosition: 'right', swipeEnabled: false }}>
-        <cartDrawer.Screen name='Cart' component={NewBet} options={{ headerShown: false, sceneContainerStyle: { backgroundColor: '#fff', opacity: 1 }, overlayColor: 'rgba(0, 0, 0, 0.02)'} } />
+    <cartDrawer.Navigator drawerContent={Cart} screenOptions={{ drawerStyle: { width: '60%', borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }, drawerPosition: 'right', swipeEnabled: false }}>
+        <cartDrawer.Screen name='Cart' component={NewBet} options={{ headerShown: false, sceneContainerStyle: { opacity: 1 }, overlayColor: 'rgba(0, 0, 0, 0.02)'} } />
     </cartDrawer.Navigator>
 );
 
