@@ -20,7 +20,7 @@ interface Styles {
     elevation: number;
 };
 
-export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>) {
+export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
     const [style, setStyle] = useState<Styles>({ opacity: .5, elevation: 0 });
     const imgRef = useRef<Image & Ref>(null);
     const animationEnd = (): void => {

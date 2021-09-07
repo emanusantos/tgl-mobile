@@ -10,7 +10,7 @@ export interface Game {
     trash: boolean;
 };
 
-export default function GameDisplay({ color, numbers, date, price, type, trash }: Game) {
+export default function GameDisplay({ color, numbers, date, price, type, trash }: Game): JSX.Element {
     return (
         <View style={{ paddingVertical: 10, paddingHorizontal: 5, flexDirection: 'row' }}>
             <View style={{ height: 85, width: 6, backgroundColor: color, borderRadius: 100 }}></View>

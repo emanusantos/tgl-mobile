@@ -6,7 +6,7 @@ import GameDisplay from './GameDisplay';
 
 const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
 
-export default function Cart({ navigation }: DrawerContentComponentProps) {
+export default function Cart({ navigation }: DrawerContentComponentProps): JSX.Element {
     return (
         <View style={styles.container}>
             <Foundation name='x' size={20} color='#B5C401' style={{ alignSelf: 'flex-end', padding: 15 }} onPress={() => {navigation.closeDrawer()}} />

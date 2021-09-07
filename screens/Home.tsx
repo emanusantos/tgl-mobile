@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import GameDisplay from '../components/GameDisplay';
 import BetButton from '../components/BetButton';
 
-const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
+const numbers: string = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
 
-export default function Home() {
+export default function Home(): JSX.Element {
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>RECENT GAMES</Text>
