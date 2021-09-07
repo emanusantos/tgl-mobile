@@ -4,6 +4,8 @@ import { MaterialCommunityIcons, Foundation } from '@expo/vector-icons';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import GameDisplay from './GameDisplay';
 
+const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
+
 export default function Cart({ navigation }: DrawerContentComponentProps) {
     return (
         <View style={styles.container}>
@@ -12,8 +14,10 @@ export default function Cart({ navigation }: DrawerContentComponentProps) {
                 <MaterialCommunityIcons name='cart-outline' size={35} color='#B5C401' />
                 <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070', paddingLeft: 10 }}>CART</Text>
             </View>
-            <ScrollView>
-                <Text>Mock</Text>
+            <ScrollView style={{ padding: 10 }}>
+                <GameDisplay numbers={numbers} color='#01AC66' date='07/09/2020' price={2.50} type='Mega-Sena' trash={false}  />
+                <GameDisplay numbers={numbers} color='#01AC66' date='07/09/2020' price={2.50} type='Mega-Sena' trash={false}  />
+                <GameDisplay numbers={numbers} color='#01AC66' date='07/09/2020' price={2.50} type='Mega-Sena' trash={false}  />
             </ScrollView>
         </View>
     )
