@@ -1,23 +1,24 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ColorValue } from 'react-native';
 
 export interface Game {
-    color: string;
+    color: ColorValue;
     numbers: string;
     date: string;
     price: number;
     type: string;
+    trash: boolean;
 };
 
-export default function GameDisplay({ color, numbers, date, price, type }: Game) {
+export default function GameDisplay({ color, numbers, date, price, type, trash }: Game) {
     return (
-        <View style={{ padding: 15, flexDirection: 'row' }}>
-            <View style={{ height: 78, width: 6, backgroundColor: color, borderRadius: 100 }}></View>
-            <View style={{ paddingHorizontal: 10 }}>
+        <View style={{ paddingVertical: 10, paddingHorizontal: 5, flexDirection: 'row' }}>
+            <View style={{ height: 85, width: 6, backgroundColor: color, borderRadius: 100 }}></View>
+            <View style={{ paddingHorizontal: 15 }}>
                 <Text style={{ color: '#868686', fontSize: 12, fontWeight: 'bold', fontStyle: 'italic' }}>{numbers}</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ color: '#868686', fontSize: 12 }}>{date} - (R$ {price})</Text>
-                    <Text>icone lixeira</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>
+                    <Text style={{ color: '#868686', fontSize: 12 }}>{date} - (R$ {price.toFixed(2).replace('.', ',')})</Text>
+                    {trash && <Text>icone lixeira</Text>}
                 </View>
                 <Text style={{ fontSize: 16, color: color, fontWeight: 'bold', fontStyle: 'italic' }}>{type}</Text>
             </View>
