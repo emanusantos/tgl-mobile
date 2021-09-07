@@ -8,6 +8,7 @@ import Home from './screens/Home';
 import Account from './screens/Account';
 import NewBetCart from './screens/NewBet';
 import Cart from './components/Cart';
+import FocusBar from './components/FocusBar';
 import { MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
@@ -44,6 +45,7 @@ export default function App() {
       tabBarStyle: { height: 71.8, borderTopLeftRadius: 25, borderTopRightRadius: 25 } }}>
       <Tabs.Screen name='Home' component={Home} options={{ tabBarIcon: ({ focused }) => (
         <View style={{ alignItems: 'center' }}>
+          {focused && <FocusBar />}
           <MaterialCommunityIcons name='home-outline' size={35} color={focused ? '#B5C401' : '#C1C1C1'} />
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Home</Text>
         </View>
@@ -58,6 +60,7 @@ export default function App() {
       headerTitle: () => (<HeaderTitle />)}} />
       <Tabs.Screen name='Account' component={Account} options={{ tabBarIcon: ({ focused }) => (
         <View style={{ alignItems: 'center' }}>
+          {focused && <FocusBar />}
           <Ionicons name='person-outline' size={30} color={focused ? '#B5C401' : '#C1C1C1'} />
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Account</Text>
         </View>
