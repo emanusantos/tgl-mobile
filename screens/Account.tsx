@@ -1,23 +1,36 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Account(): JSX.Element {
+    const [editName, setEditName] = useState<boolean>(false);
+    const [editEmail, setEditEmail] = useState<boolean>(false);
+
     return (
         <View style={{ flex: 1, paddingHorizontal: 20 }}>
             <Text style={{ paddingTop: 30, paddingBottom: 20, fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#B5C401' }}>USER'S PROFILE:</Text>
             <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
                 <Text style={{...styles.text, fontWeight: 'bold' }}>Name: </Text>
                 <Text style={styles.text}>User </Text>
-                <Ionicons name='create-outline' size={20} color='#B5C401' />
+                <Ionicons name='create-outline' size={20} color='#B5C401' onPress={() => setEditName(!editName)} />
             </View>
-            <TextInput style={styles.input} placeholder='Edit your name' />
+            {editName && <View style={{ flexDirection: 'row' }}>
+                <TextInput style={styles.input} placeholder='Edit your name' />
+                <TouchableOpacity style={{ backgroundColor: '#fff', justifyContent: 'center', borderTopRightRadius: 20, borderBottomRightRadius: 20 }}>
+                    <Ionicons name='checkmark-circle-outline' size={20} color='#B5C401' style={{ padding: 20 }} />
+                </TouchableOpacity>
+            </View>}
             <View style={{ flexDirection: 'row', paddingVertical: 20 }}>
                 <Text style={{...styles.text, fontWeight: 'bold' }}>Email: </Text>
                 <Text style={styles.text}>email@email.com </Text>
-                <Ionicons name='create-outline' size={20} color='#B5C401' />
+                <Ionicons name='create-outline' size={20} color='#B5C401' onPress={() => setEditEmail(!editEmail)} />
             </View>
-            <TextInput style={styles.input} placeholder='Edit your email' />
+            {editEmail && <View style={{ flexDirection: 'row' }}>
+                <TextInput style={styles.input} placeholder='Edit your email' />
+                <TouchableOpacity style={{ backgroundColor: '#fff', justifyContent: 'center', borderTopRightRadius: 20, borderBottomRightRadius: 20 }}>
+                    <Ionicons name='checkmark-circle-outline' size={20} color='#B5C401' style={{ padding: 20 }} />
+                </TouchableOpacity>
+            </View>}
         </View>
     );
 };
@@ -32,9 +45,10 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         fontWeight: 'bold',
         paddingLeft: 20,
-        width: 306,
+        width: 200,
         height: 70.8,
         backgroundColor: '#fff',
-        borderRadius: 20,
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
     },
 })
