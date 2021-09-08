@@ -4,12 +4,7 @@ import { createDrawerNavigator, DrawerScreenProps, useDrawerStatus } from '@reac
 import Cart from '../components/Cart';
 import BetButton from '../components/BetButton';
 import SelectedNumber from '../components/SelectedNumber';
-
-type RootStackParamList = {
-    Home: undefined;
-    Cart: undefined;
-    Newbet: undefined;
-};
+import { RootStackParamList } from '../types/FormScreenTypes';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
@@ -17,6 +12,7 @@ let currentGameRange: number[] = [];
 function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Element {
     const drawer = useDrawerStatus();
     const [opacity, setOpacity] = useState<number>(1);
+    const [choseNumbers, setChoseNumbers] = useState<number[]>([]);
 
     useEffect(() => {
         if (drawer === 'open') {
@@ -32,6 +28,27 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         for (let i = 1; i <= range; i++) {
             currentGameRange.push(i);
         };
+    };
+
+    const numberAlreadyExists = (array: number[], number: number) => {
+        return array.some((index) => {
+            return index === number;
+        });
+    };
+
+    const selectNumber = (number: number): void => {
+        if (numberAlreadyExists(choseNumbers!, number)) {
+            const array = removeNumber(choseNumbers!, number);
+            return setChoseNumbers(array);
+        }
+    
+        setChoseNumbers([...choseNumbers!, number])
+    };
+
+    const removeNumber = (array: number[], number: number) => {
+        return (array = array.filter((num) => {
+            return num !== number;
+        }));
     };
 
     return (
@@ -50,7 +67,14 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                 </View>
                 <View style={{ width: 36, height: 6, backgroundColor: '#C1C1C1', margin: 10, borderRadius: 6, alignSelf: 'center' }}></View>
                 <ScrollView contentContainerStyle={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', paddingBottom: 200 }}>
-                    {currentGameRange && currentGameRange.map((num) => <SelectedNumber key={num} number={num} />)}
+                    {currentGameRange && currentGameRange.map((num, i) => {
+                        let selected = false;
+                        if (choseNumbers.includes(num)) selected = true;
+                        let bgc = selected ? 'red' : '#ADC0C4';
+                        return (
+                            <SelectedNumber bgc={bgc} onPress={() => selectNumber(num)} number={num} key={i} />
+                        )
+                    })}
                 </ScrollView>
             </View>
         </View>

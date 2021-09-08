@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 
-export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps) {
+export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps): JSX.Element {
     const [userCredentials, setUserCredentials] = useState({
         name: '',
         email: '',

@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ScreenProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 
-export default function ResetPassword({ stateStyle, navigation, setScreen }: ScreenProps) {
+export default function ResetPassword({ stateStyle, navigation, setScreen }: ScreenProps): JSX.Element {
     const [email, setEmail] = useState('');
     return (
         <View style={{...styles.container, opacity: stateStyle.opacity}}>
