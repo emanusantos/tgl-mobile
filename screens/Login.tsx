@@ -21,6 +21,7 @@ interface Styles {
 };
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
+    const [screen, setScreen] = useState<string>('Login');
     const [style, setStyle] = useState<Styles>({ opacity: .5, elevation: 0 });
     const imgRef = useRef<Image & Ref>(null);
     const animationEnd = (): void => {
@@ -30,40 +31,104 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
         }, 1000);
     };
 
-    return (
-        <>
-        <Animatable.Image
-            animation='fadeInUpBig'
-            duration={1500}
-            ref={imgRef}
-            onAnimationEnd={animationEnd}
-            style={styles.img} source={require('../assets/splash.png')} 
-        />
-        <View style={{...styles.container, opacity: style.opacity}}>
-        <StatusBar style="auto" />
-            <View style={styles.header}>
-                <Text style={styles.tgl}>TGL</Text>
-                <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
-            </View>
-            <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Authentication</Text>
-            <View style={{...styles.box, elevation: style.elevation}}>
-                <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
-                <TextInput placeholder='Password' style={styles.input} secureTextEntry={true} />
-                <Text style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }}>I forget my password</Text>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
-                    <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
-                        <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
+    const ResetPassword = (): JSX.Element => {
+        return (
+            <View style={{...styles.container, opacity: style.opacity}}>
+                <StatusBar style="auto" />
+                    <View style={styles.header}>
+                        <Text style={styles.tgl}>TGL</Text>
+                        <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
                     </View>
-                </TouchableOpacity>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Reset Password</Text>
+                <View style={{...styles.box, elevation: style.elevation}}>
+                    <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
+                        <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Send link</Text>
+                            <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }} onPress={() => setScreen('Login')}>
+                    <Ionicons name="arrow-back-outline" size={30} color='#707070' />
+                    Back
+                </Text>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }} onPress={() => setScreen('SignUp')}>
+                    Sign Up 
+                    <Ionicons name="arrow-forward-outline" size={30} color='#707070' />
+                </Text>
             </View>
-            <Text style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>
-                Sign Up 
-                <Ionicons name="arrow-forward-outline" size={30} color='#707070' />
-            </Text>
-        </View>
-        </>
-    )
+        );
+    };
+
+    const SignUp = (): JSX.Element => {
+        return (
+            <View style={{...styles.container, opacity: style.opacity}}>
+                <StatusBar style="auto" />
+                    <View style={styles.header}>
+                        <Text style={styles.tgl}>TGL</Text>
+                        <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
+                    </View>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Registration</Text>
+                <View style={{...styles.box, elevation: style.elevation}}>
+                    <TextInput placeholder='Name' style={styles.input} autoCompleteType='name' keyboardType='name-phone-pad' />
+                    <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
+                    <TextInput placeholder='Password' style={styles.input} secureTextEntry={true} />
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
+                        <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Register</Text>
+                            <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }} onPress={() => setScreen('Login')}>
+                    <Ionicons name="arrow-back-outline" size={30} color='#707070' />
+                    Back
+                </Text>
+            </View>
+        );
+    };
+
+    if (screen === 'Login') {
+        return (
+            <>
+            <Animatable.Image
+                animation='fadeInUpBig'
+                duration={1500}
+                ref={imgRef}
+                onAnimationEnd={animationEnd}
+                style={styles.img} source={require('../assets/splash.png')} 
+            />
+            <View style={{...styles.container, opacity: style.opacity}}>
+            <StatusBar style="auto" />
+                <View style={styles.header}>
+                    <Text style={styles.tgl}>TGL</Text>
+                    <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
+                </View>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Authentication</Text>
+                <View style={{...styles.box, elevation: style.elevation}}>
+                    <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
+                    <TextInput placeholder='Password' style={styles.input} secureTextEntry={true} />
+                    <Text style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }} onPress={() => setScreen('ResetPassword')}>I forget my password</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
+                        <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
+                            <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }} onPress={() => setScreen('SignUp')}>
+                    Sign Up 
+                    <Ionicons name="arrow-forward-outline" size={30} color='#707070' />
+                </Text>
+            </View>
+            </>
+        );
+    } else if (screen === 'SignUp') {
+        return <SignUp />
+    } else {
+        return <ResetPassword />
+    }
 };
 
 const styles = StyleSheet.create({

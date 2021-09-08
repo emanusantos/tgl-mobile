@@ -50,7 +50,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                 </View>
                 <View style={{ width: 36, height: 6, backgroundColor: '#C1C1C1', margin: 10, borderRadius: 6, alignSelf: 'center' }}></View>
                 <ScrollView contentContainerStyle={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', paddingBottom: 200 }}>
-                    {currentGameRange && currentGameRange.map((num) => <SelectedNumber number={num} />)}
+                    {currentGameRange && currentGameRange.map((num) => <SelectedNumber key={num} number={num} />)}
                 </ScrollView>
             </View>
         </View>
