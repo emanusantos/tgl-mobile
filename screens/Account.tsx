@@ -15,7 +15,7 @@ export default function Account(): JSX.Element {
                 <Ionicons name='create-outline' size={20} color='#B5C401' onPress={() => setEditName(!editName)} />
             </View>
             {editName && <View style={{ flexDirection: 'row' }}>
-                <TextInput style={styles.input} placeholder='Edit your name' />
+            <TextInput placeholder='Edit your name' style={styles.input} autoCompleteType='name' keyboardType='name-phone-pad' />
                 <TouchableOpacity style={{ backgroundColor: '#fff', justifyContent: 'center', borderTopRightRadius: 20, borderBottomRightRadius: 20 }}>
                     <Ionicons name='checkmark-circle-outline' size={20} color='#B5C401' style={{ padding: 20 }} />
                 </TouchableOpacity>
@@ -26,7 +26,7 @@ export default function Account(): JSX.Element {
                 <Ionicons name='create-outline' size={20} color='#B5C401' onPress={() => setEditEmail(!editEmail)} />
             </View>
             {editEmail && <View style={{ flexDirection: 'row' }}>
-                <TextInput style={styles.input} placeholder='Edit your email' />
+            <TextInput placeholder='Edit your email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
                 <TouchableOpacity style={{ backgroundColor: '#fff', justifyContent: 'center', borderTopRightRadius: 20, borderBottomRightRadius: 20 }}>
                     <Ionicons name='checkmark-circle-outline' size={20} color='#B5C401' style={{ padding: 20 }} />
                 </TouchableOpacity>

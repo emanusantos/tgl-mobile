@@ -1,0 +1,30 @@
+import { Dispatch, SetStateAction } from 'react';
+
+export type Ref = {
+    animate: (name: string, timer: number) => void;
+};
+
+export type RootStackParamList = {
+    Home: undefined;
+    HomeTabs: undefined;
+    Newbet: undefined;
+};
+
+export interface SStyles {
+    opacity: number;
+    elevation: number;
+};
+
+export interface ScreenProps {
+    stateStyle: SStyles;
+    setScreen: Dispatch<SetStateAction<string>>;
+    navigation: any;
+};
+
+export interface SignUpProps {
+    stateStyle: SStyles;
+    visible: boolean;
+    setVisible: Dispatch<SetStateAction<boolean>>;
+    setScreen: Dispatch<SetStateAction<string>>;
+    navigation: any;
+};
