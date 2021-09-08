@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,6 +6,12 @@ import { SignUpProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 
 export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps) {
+    const [userCredentials, setUserCredentials] = useState({
+        name: '',
+        email: '',
+        password: ''
+    });
+
     return (
         <View style={{...styles.container, opacity: stateStyle.opacity}}>
             <StatusBar style='auto' />
@@ -15,10 +21,37 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
             </View>
             <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Registration</Text>
             <View style={{...styles.box, elevation: stateStyle.elevation}}>
-                <TextInput placeholder='Name' style={styles.input} autoCompleteType='name' keyboardType='name-phone-pad' />
-                <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
-                <TextInput placeholder='Password' style={styles.input} secureTextEntry={visible} />
-                <Ionicons onPress={() => setVisible(!visible)} name='eye-outline' size={27} color='#C1C1C1' style={{ position: 'absolute', bottom: 100, right: 20 }} />
+                <TextInput 
+                    value={userCredentials.name}
+                    placeholder='Name' 
+                    style={styles.input} 
+                    autoCompleteType='name' 
+                    keyboardType='name-phone-pad'
+                    onChangeText={(text) => setUserCredentials({...userCredentials, name: text})}
+                />
+                <TextInput 
+                    value={userCredentials.email}
+                    placeholder='Email' 
+                    style={styles.input} 
+                    autoCompleteType='email' 
+                    autoCorrect={false} 
+                    keyboardType='email-address'
+                    onChangeText={(text) => setUserCredentials({...userCredentials, email: text})}
+                />
+                <TextInput 
+                    value={userCredentials.password}
+                    placeholder='Password' 
+                    style={styles.input} 
+                    secureTextEntry={visible}
+                    onChangeText={(text) => setUserCredentials({...userCredentials, password: text})}
+                />
+                <Ionicons 
+                    onPress={() => setVisible(!visible)} 
+                    name='eye-outline' 
+                    size={27} 
+                    color='#C1C1C1' 
+                    style={{ position: 'absolute', bottom: 100, right: 20 }}
+                />
                 <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Register</Text>

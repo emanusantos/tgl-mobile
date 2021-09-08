@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,6 +6,7 @@ import { ScreenProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 
 export default function ResetPassword({ stateStyle, navigation, setScreen }: ScreenProps) {
+    const [email, setEmail] = useState('');
     return (
         <View style={{...styles.container, opacity: stateStyle.opacity}}>
             <StatusBar style="auto" />
@@ -15,7 +16,15 @@ export default function ResetPassword({ stateStyle, navigation, setScreen }: Scr
             </View>
             <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Reset Password</Text>
             <View style={{...styles.box, elevation: stateStyle.opacity}}>
-                <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
+                <TextInput
+                    value={email}
+                    placeholder='Email' 
+                    style={styles.input} 
+                    autoCompleteType='email' 
+                    autoCorrect={false} 
+                    keyboardType='email-address'
+                    onChangeText={(text) => setEmail(text)}
+                />
                 <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Send link</Text>

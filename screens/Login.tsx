@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Animatable from 'react-native-animatable';
@@ -10,6 +10,10 @@ import { Ref, RootStackParamList, SStyles } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
+    const [userCredentials, setUserCredentials] = useState({
+        email: '',
+        password: ''
+    });
     const [visible, setVisible] = useState<boolean>(true);
     const [screen, setScreen] = useState<string>('Login');
     const [style, setStyle] = useState<SStyles>({ opacity: .5, elevation: 0 });
@@ -39,10 +43,36 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                 </View>
                 <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Authentication</Text>
                 <View style={{...styles.box, elevation: style.elevation}}>
-                    <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
-                    <TextInput placeholder='Password' style={styles.input} secureTextEntry={visible} />
-                    <Ionicons onPress={() => setVisible(!visible)} name='eye-outline' size={27} color='#C1C1C1' style={{ position: 'absolute', top: 92, right: 20 }} />
-                    <Text style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }} onPress={() => setScreen('ResetPassword')}>I forget my password</Text>
+                    <TextInput
+                        value={userCredentials.email}
+                        placeholder='Email' 
+                        style={styles.input} 
+                        autoCompleteType='email' 
+                        autoCorrect={false} 
+                        keyboardType='email-address'
+                        onChangeText={(text) => {setUserCredentials({...userCredentials, email: text})}}
+                    />
+                    <TextInput 
+                        value={userCredentials.password}
+                        placeholder='Password' 
+                        style={styles.input} 
+                        secureTextEntry={visible} 
+                        onChangeText={(text) => {setUserCredentials({...userCredentials, password: text})}}
+                    />
+                    <Ionicons 
+                        onPress={() => setVisible(!visible)} 
+                        name='eye-outline' 
+                        size={27} 
+                        color='#C1C1C1' 
+                        style={{ position: 'absolute', top: 92, right: 20 }} 
+                    />
+                    <Text 
+                        style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }} 
+                        onPress={() => 
+                        setScreen('ResetPassword')}
+                    >
+                        I forget my password
+                    </Text>
                     <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
                         <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
@@ -50,7 +80,10 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                         </View>
                     </TouchableOpacity>
                 </View>
-                <Text style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }} onPress={() => setScreen('SignUp')}>
+                <Text 
+                    style={{ paddingTop: 35, color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }} 
+                    onPress={() => setScreen('SignUp')}
+                >
                     Sign Up 
                     <Ionicons name="arrow-forward-outline" size={30} color='#707070' />
                 </Text>
