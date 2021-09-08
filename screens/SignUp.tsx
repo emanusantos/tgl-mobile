@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps } from '../types/FormScreenTypes';
+import { styles } from '../styles/LoginStyleSheet';
 
 export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps) {
     return (
@@ -18,7 +19,7 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
                 <TextInput placeholder='Email' style={styles.input} autoCompleteType='email' autoCorrect={false} keyboardType='email-address' />
                 <TextInput placeholder='Password' style={styles.input} secureTextEntry={visible} />
                 <Ionicons onPress={() => setVisible(!visible)} name='eye-outline' size={27} color='#C1C1C1' style={{ position: 'absolute', bottom: 100, right: 20 }} />
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
+                <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Register</Text>
                         <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
@@ -32,48 +33,3 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F7F7F7',
-        alignItems: 'center',
-    },
-    img: {
-        position: 'absolute',
-        zIndex: 10,
-        bottom: 0,
-        width: '100%',
-        height: '85%',
-    },
-    header: {
-        alignItems: 'center',
-    },
-    tgl: {
-        color: '#707070',
-        fontSize: 44,
-        fontStyle: 'italic',
-        fontWeight: 'bold',
-        marginTop: 70,
-    },
-    box: {
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#DDDDDD',
-        borderRadius: 10,
-        marginTop: 20,
-        backgroundColor: '#fff',
-    },
-    input: {
-        fontStyle: 'italic',
-        fontWeight: 'bold',
-        paddingLeft: 20,
-        width: 306,
-        height: 70.8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#DDDDDD',
-    },
-    button: {
-
-    },
-  });

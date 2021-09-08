@@ -7,6 +7,7 @@ import * as Animatable from 'react-native-animatable';
 import SignUp from './SignUp';
 import ResetPassword from './ResetPassword';
 import { Ref, RootStackParamList, SStyles } from '../types/FormScreenTypes';
+import { styles } from '../styles/LoginStyleSheet';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
     const [visible, setVisible] = useState<boolean>(true);
@@ -42,7 +43,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                     <TextInput placeholder='Password' style={styles.input} secureTextEntry={visible} />
                     <Ionicons onPress={() => setVisible(!visible)} name='eye-outline' size={27} color='#C1C1C1' style={{ position: 'absolute', top: 92, right: 20 }} />
                     <Text style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }} onPress={() => setScreen('ResetPassword')}>I forget my password</Text>
-                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeTabs')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
                         <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
                             <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />
@@ -72,48 +73,3 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
         />
     }
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F7F7F7',
-        alignItems: 'center',
-    },
-    img: {
-        position: 'absolute',
-        zIndex: 10,
-        bottom: 0,
-        width: '100%',
-        height: '85%',
-    },
-    header: {
-        alignItems: 'center',
-    },
-    tgl: {
-        color: '#707070',
-        fontSize: 44,
-        fontStyle: 'italic',
-        fontWeight: 'bold',
-        marginTop: 70,
-    },
-    box: {
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#DDDDDD',
-        borderRadius: 10,
-        marginTop: 20,
-        backgroundColor: '#fff',
-    },
-    input: {
-        fontStyle: 'italic',
-        fontWeight: 'bold',
-        paddingLeft: 20,
-        width: 306,
-        height: 70.8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#DDDDDD',
-    },
-    button: {
-
-    },
-  });
