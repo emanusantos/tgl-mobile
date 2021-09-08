@@ -5,6 +5,7 @@ import Cart from '../components/Cart';
 import BetButton from '../components/BetButton';
 import SelectedNumber from '../components/SelectedNumber';
 import { RootStackParamList } from '../types/FormScreenTypes';
+import { Game, GameResponse } from '../types/BetTypes';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
@@ -13,6 +14,11 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
     const drawer = useDrawerStatus();
     const [opacity, setOpacity] = useState<number>(1);
     const [choseNumbers, setChoseNumbers] = useState<number[]>([]);
+    const [data, setData] = useState<GameResponse[]>([]);
+
+    useEffect(() => {
+        getGames();
+    }, []);
 
     useEffect(() => {
         if (drawer === 'open') {
@@ -23,6 +29,13 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
             return setOpacity(1);
         };
     }, [navigation, drawer]);
+
+    const getGames = async (): Promise<void> => {
+        const url = 'http://localhost:3333/games';
+        const games = await fetch(url);
+        const gamesJSON = await games.json();
+        setData(gamesJSON.data);
+    };
 
     const rangeHandler = (range: number): void => {
         for (let i = 1; i <= range; i++) {
