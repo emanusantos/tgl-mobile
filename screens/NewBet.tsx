@@ -15,6 +15,15 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
     const [opacity, setOpacity] = useState<number>(1);
     const [choseNumbers, setChoseNumbers] = useState<number[]>([]);
     const [data, setData] = useState<GameResponse[]>([]);
+    const [game, setGame] = useState<Game>({
+        type: '',
+        description: '',
+        range: 0,
+        price: 0,
+        max_number: 0,
+        color: '',
+        min_cart_value: 0
+    });
 
     useEffect(() => {
         getGames();
@@ -31,10 +40,44 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
     }, [navigation, drawer]);
 
     const getGames = async (): Promise<void> => {
-        const url = 'http://localhost:3333/games';
-        const games = await fetch(url);
-        const gamesJSON = await games.json();
-        setData(gamesJSON.data);
+        try {
+            const url = 'http://10.0.0.101:3333/games';
+            const games = await fetch(url);
+            const gamesJSON = await games.json();
+            setData(gamesJSON);
+        } catch (error) {
+            alert(error);
+        };
+    };
+
+    const updateGameType = (e: string) => {
+        if (e === game.type) {
+            return;
+        };
+
+        if (e === 'Lotofácil') {
+            currentGameRange = [];
+            setGame(data[0]);
+            //gameid = data[0].id;
+            //pushNumbers(data[0].range);
+            setChoseNumbers([])
+        };
+
+        if (e === 'Mega-Sena') {
+            currentGameRange = [];
+            setGame(data[1])
+            //gameid = data[1].id;
+            //pushNumbers(data[1].range);
+            setChoseNumbers([])
+        };
+
+        if (e === 'Quina') {
+            currentGameRange = [];
+            setGame(data[2])
+            //gameid = data[2].id;
+            //pushNumbers(data[2].range);
+            setChoseNumbers([])
+        };
     };
 
     const rangeHandler = (range: number): void => {
@@ -70,9 +113,19 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                 <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>NEW BET FOR</Text>
                 <Text style={{ fontSize: 17, fontStyle: 'italic', color: '#868686', paddingVertical: 15 }}>Choose a game</Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <BetButton type='Lotofácil' color='#7F3992' onPress={rangeHandler(50)} />
-                    <BetButton type='Mega-Sena' color='#01AC66' />
-                    <BetButton type='Quina' color='#F79C31' />
+                    {data && data.map((button) => {
+                        let color = button.color;
+                        let bgc = '#fff';
+                        let border = color;
+                        if (game.type === button.type) {
+                            bgc = color;
+                            color = '#fff';
+                            border = '#fff';
+                        }
+                        return (
+                            <BetButton border={border} bgc={bgc} color={color} type={button.type} key={button.id} onPress={(e: any) => updateGameType(button.type)} />
+                        );
+                    })}
                 </View>
                 <View style={{ paddingTop: 20 }}>
                     <Text style={{ fontWeight: 'bold', fontStyle: 'italic', fontSize: 17, color: '#868686', paddingBottom: 2 }}>Fill your bet</Text>
