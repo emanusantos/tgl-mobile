@@ -3,16 +3,36 @@ import { TouchableOpacity, Text } from 'react-native';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
 import { Ionicons } from '@expo/vector-icons';
 import { saveCart } from '../store/cartSlice';
+import axios from 'axios';
 
 export default function Save() {
     const dispatch = useAppDispatch();
     const total = useAppSelector(state => state.cart.total);
+    const bets = useAppSelector(state => state.cart.cart);
+    const token = useAppSelector(state => state.auth.token);
+    const [, ...rest] = bets;
+    const postedData = rest.map(({ game_id, numbers }) => ({ game_id, numbers }));
+
+    const postBets = async (): Promise<void> => {
+        await axios.post('http://10.0.0.103:3333/bets', {
+            'betCart': postedData
+        }, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then(res => {
+            alert(res.status);
+        }).catch(err => {
+            alert(err);
+        });
+    };
+    
     const handleSave = (): void => {
         if (total < 30) {
             return alert("You can't save your cart with less than R$30,00 in bets.");
         } else {
             dispatch(saveCart());
-            alert('Success!');
+            postBets();
         };
     };
 

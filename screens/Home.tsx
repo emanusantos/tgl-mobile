@@ -16,7 +16,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
         userCheck();
         getGames();
         getBets();
-    }, [])
+    }, [navigation])
     const [games, setGames] = useState<GameResponse[]>([]);
     const [bets, setBets] = useState<BetResponse[]>([]);
     const [filters, setFilters] = useState<string | null>(null);
