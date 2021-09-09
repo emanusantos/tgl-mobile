@@ -11,6 +11,7 @@ import Cart from './components/Cart';
 import FocusBar from './components/FocusBar';
 import { MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import HeaderTitle from './components/HeaderTitle';
 
 export default function App() {
   const RootStack = createNativeStackNavigator();
@@ -21,16 +22,6 @@ export default function App() {
     <TouchableOpacity activeOpacity={.8} onPress={onPress} style={{ top: -20, justifyContent: 'center', alignItems: 'center' }}>
       <View style={{ width: 90, height: 90, borderWidth: 5, borderColor: '#fff', elevation: 10, backgroundColor: '#B5C300', padding: 15, borderRadius: 50 }}>{children}</View>
     </TouchableOpacity>
-  );
-
-  const HeaderTitle = () => (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-      <View style={{ alignItems: 'center', paddingBottom: 15 }}>
-        <Text style={{ color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>TGL</Text>
-        <View style={{ width: 70, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
-      </View>
-      <MaterialIcons name='logout' size={30} color='#C1C1C1' style={{ paddingBottom: 10 }} />
-    </View>
   );
 
   const CartScreen = () => (
@@ -53,11 +44,11 @@ export default function App() {
       <Tabs.Screen 
       name='Newbet' 
       component={NewBetCart} 
-      options={{ tabBarIcon: () => (
+      options={{ headerShown: false, tabBarIcon: () => (
           <Image source={require('./assets/newbeticon.png')} style={{ width: 55, height: 55 }} resizeMode='contain' />
       ), 
-      tabBarButton: (props) => (<CustomBetButton {...props} />), 
-      headerTitle: () => (<HeaderTitle />)}} />
+      tabBarButton: (props) => (<CustomBetButton {...props} />) 
+     }} />
       <Tabs.Screen name='Account' component={Account} options={{ tabBarIcon: ({ focused }) => (
         <View style={{ alignItems: 'center' }}>
           {focused && <FocusBar />}

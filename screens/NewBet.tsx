@@ -7,6 +7,7 @@ import SelectedNumber from '../components/SelectedNumber';
 import { RootStackParamList } from '../types/FormScreenTypes';
 import { Game, GameResponse } from '../types/BetTypes';
 import { Ionicons } from '@expo/vector-icons';
+import HeaderTitle from '../components/HeaderTitle';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
@@ -151,6 +152,8 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
     };
 
     return (
+        <>
+        <HeaderTitle paddingH={15} paddingV={20} />
         <View style={{...styles.container, opacity: opacity}}>
             <View>
                 <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>NEW BET {game.type && `FOR ${game.type.toUpperCase()}`}</Text>
@@ -197,7 +200,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                     <TouchableOpacity onPress={clearGame} style={{ borderWidth: 1, borderColor: '#B5C401', borderRadius: 4, padding: 5, marginRight: 10 }}>
                         <Text style={{ color: '#B5C401', fontWeight: 'bold', fontSize: 13 }}>Clear game</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ backgroundColor: '#B5C401', borderRadius: 4, padding: 5, width: '35%', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={{ backgroundColor: '#B5C401', borderRadius: 4, padding: 5, width: '35%', alignItems: 'center' }}>
                         <Text style={{ color: '#fff', fontSize: 13 }}><Ionicons name='cart-outline' size={20} color='#fff' />  Add to cart</Text>
                     </TouchableOpacity>
                 </View> : null}
@@ -222,6 +225,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                 </ScrollView>
             </View>
         </View>
+        </>
     );
 };
 
