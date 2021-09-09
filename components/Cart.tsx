@@ -9,7 +9,7 @@ const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01,
 export default function Cart({ navigation }: DrawerContentComponentProps): JSX.Element {
     return (
         <View style={styles.container}>
-            <Foundation name='x' size={20} color='#B5C401' style={{ alignSelf: 'flex-end', padding: 15 }} onPress={() => {navigation.closeDrawer()}} />
+            <Foundation name='x' size={20} color='#B5C401' style={{ alignSelf: 'flex-end', padding: 18 }} onPress={() => {navigation.closeDrawer()}} />
             <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
                 <MaterialCommunityIcons name='cart-outline' size={35} color='#B5C401' />
                 <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070', paddingLeft: 10 }}>CART</Text>
@@ -26,6 +26,7 @@ export default function Cart({ navigation }: DrawerContentComponentProps): JSX.E
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 10,
     },
 })
 

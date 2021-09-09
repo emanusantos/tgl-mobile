@@ -153,7 +153,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 
     return (
         <>
-        <HeaderTitle paddingH={15} paddingV={20} />
+        <HeaderTitle paddingH={15} paddingV={20} opacity={opacity} />
         <View style={{...styles.container, opacity: opacity}}>
             <View>
                 <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>NEW BET {game.type && `FOR ${game.type.toUpperCase()}`}</Text>
