@@ -8,6 +8,8 @@ import { RootStackParamList } from '../types/FormScreenTypes';
 import { Game, GameResponse, Bet } from '../types/BetTypes';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderTitle from '../components/HeaderTitle';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
+import { addBet } from '../store/cartSlice';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
@@ -15,6 +17,7 @@ let gameid: number;
 let total = Number(0);
 
 function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Element {
+    const dispatch = useAppDispatch();
     const drawer = useDrawerStatus();
     const [opacity, setOpacity] = useState<number>(1);
     const [choseNumbers, setChoseNumbers] = useState<number[]>([]);
@@ -173,7 +176,8 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         };
 
         total += game.price;
-        setCart([...cart, { id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }]);
+        dispatch(addBet({ id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }));
+        alert('Success')
         navigation.openDrawer();
         clearGame();
     };
@@ -259,7 +263,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 
 const NewBetCart = (): JSX.Element => (
     <cartDrawer.Navigator drawerContent={Cart} screenOptions={{ drawerStyle: { width: '60%', borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }, drawerPosition: 'right', swipeEnabled: false }}>
-        <cartDrawer.Screen name='Cart' component={NewBet} options={{ headerShown: false, sceneContainerStyle: { opacity: 1 }, overlayColor: 'rgba(0, 0, 0, 0.02)'} } />
+        <cartDrawer.Screen name='NewBet' component={NewBet} options={{ headerShown: false, sceneContainerStyle: { opacity: 1 }, overlayColor: 'rgba(0, 0, 0, 0.02)'} } />
     </cartDrawer.Navigator>
 );
 

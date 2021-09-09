@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { Bet } from './BetTypes';
 
 export type Ref = {
     animate: (name: string, timer: number) => void;
@@ -8,6 +9,7 @@ export type RootStackParamList = {
     Home: undefined;
     HomeTabs: undefined;
     Newbet: undefined;
+    Cart: any;
 };
 
 export interface SStyles {
