@@ -16,7 +16,16 @@ export default function CartInfo() {
 
     return (
         <>
-        {bets && rest.map((bet) => <GameDisplay onPress={() => handleRemove(bet.id, bet.price)} date={new Date().toLocaleDateString('br')} key={bet.id} color={bet.color} price={bet.price} type={bet.type} numbers={bet.numbers} trash={true} />)}
+        {bets && rest.map((bet) => <GameDisplay 
+            onPress={() => handleRemove(bet.id, bet.price)} 
+            date={new Date().toLocaleDateString('br')} 
+            key={bet.id} color={bet.color} 
+            price={bet.price} 
+            type={bet.type} 
+            numbers={bet.numbers} 
+            trash={true} 
+        />
+        )}
         </>
     );
 };

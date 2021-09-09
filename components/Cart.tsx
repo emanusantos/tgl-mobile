@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons, Foundation } from '@expo/vector-icons';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { Ionicons } from '@expo/vector-icons';
 import CartInfo from './CartInfo';
 import Total from './Total';
+import Save from './Save';
 
 const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
 
@@ -20,9 +20,7 @@ export default function Cart({ navigation }: DrawerContentComponentProps): JSX.E
                 <CartInfo />
             </ScrollView>
             <Total />
-            <TouchableOpacity style={{ height: 95, backgroundColor: '#EBEBEB', width: '100%', justifyContent: 'center', alignItems: 'center', borderBottomLeftRadius: 13, borderBottomRightRadius: 13 }}>
-                <Text style={{ fontSize: 30, color: '#B5C401', fontWeight: 'bold', fontStyle: 'italic' }}>Save <Ionicons name="arrow-forward-outline" size={30} color='#B5C401' /></Text>
-            </TouchableOpacity>
+            <Save />
         </View>
     );
 };
