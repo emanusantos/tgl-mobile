@@ -6,6 +6,7 @@ import BetButton from '../components/BetButton';
 import SelectedNumber from '../components/SelectedNumber';
 import { RootStackParamList } from '../types/FormScreenTypes';
 import { Game, GameResponse } from '../types/BetTypes';
+import { Ionicons } from '@expo/vector-icons';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
@@ -41,7 +42,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 
     const getGames = async (): Promise<void> => {
         try {
-            const url = 'http://10.0.0.101:3333/games';
+            const url = 'http://10.0.0.103:3333/games';
             const games = await fetch(url);
             const gamesJSON = await games.json();
             setData(gamesJSON);
@@ -59,7 +60,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
             currentGameRange = [];
             setGame(data[0]);
             //gameid = data[0].id;
-            //pushNumbers(data[0].range);
+            rangeHandler(data[0].range);
             setChoseNumbers([])
         };
 
@@ -67,7 +68,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
             currentGameRange = [];
             setGame(data[1])
             //gameid = data[1].id;
-            //pushNumbers(data[1].range);
+            rangeHandler(data[1].range);
             setChoseNumbers([])
         };
 
@@ -75,7 +76,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
             currentGameRange = [];
             setGame(data[2])
             //gameid = data[2].id;
-            //pushNumbers(data[2].range);
+            rangeHandler(data[2].range);
             setChoseNumbers([])
         };
     };
@@ -96,7 +97,12 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         if (numberAlreadyExists(choseNumbers!, number)) {
             const array = removeNumber(choseNumbers!, number);
             return setChoseNumbers(array);
-        }
+        };
+
+        if (choseNumbers!.length >= game['max_number']) {
+            alert(`You've reached the number limit of this bet (${game['max_number']})`);
+            return;
+        };
     
         setChoseNumbers([...choseNumbers!, number])
     };
@@ -107,10 +113,47 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         }));
     };
 
+    const handleRemove = (number: number) => {
+        const array = removeNumber(choseNumbers!, number);
+        return setChoseNumbers(array);
+    };
+
+    const clearGame = (): void => {
+        setChoseNumbers([]);
+    };
+
+    const getRandomGame = () => {
+        let amount = game['max_number'] - choseNumbers!.length;
+        let array: number[] = [];
+        if (amount === 0) {
+            const randomizedNumbers = generateNumbers(game['max_number'], game.range, array);
+            return setChoseNumbers([...randomizedNumbers])
+        }
+        const randomizedNumbers = generateNumbers(amount, game.range, choseNumbers!);
+        setChoseNumbers([...randomizedNumbers]);
+    };
+
+    const generateNumbers = (amount: number, range: number, array: number[]) => {
+        clearGame();
+        const getRandomNumbers = (max: number) => {
+            return Math.ceil(Math.random() * max);
+        };
+        
+        for (let i = 1; i <= amount; i++) {
+            const number = getRandomNumbers(range)
+            if (numberAlreadyExists(array, number)) {
+              i--
+            } else {
+              array.push(number)
+            }
+          }
+          return array
+    };
+
     return (
         <View style={{...styles.container, opacity: opacity}}>
             <View>
-                <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>NEW BET FOR</Text>
+                <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>NEW BET {game.type && `FOR ${game.type.toUpperCase()}`}</Text>
                 <Text style={{ fontSize: 17, fontStyle: 'italic', color: '#868686', paddingVertical: 15 }}>Choose a game</Text>
                 <View style={{ flexDirection: 'row' }}>
                     {data && data.map((button) => {
@@ -123,22 +166,57 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                             border = '#fff';
                         }
                         return (
-                            <BetButton border={border} bgc={bgc} color={color} type={button.type} key={button.id} onPress={(e: any) => updateGameType(button.type)} />
+                            <BetButton 
+                                border={border} 
+                                bgc={bgc} 
+                                color={color} 
+                                type={button.type} 
+                                key={button.id} 
+                                onPress={() => updateGameType(button.type)} 
+                            />
                         );
                     })}
                 </View>
-                <View style={{ paddingTop: 20 }}>
+
+               {game.description && choseNumbers.length === 0 ? <View style={{ paddingTop: 20 }}>
                     <Text style={{ fontWeight: 'bold', fontStyle: 'italic', fontSize: 17, color: '#868686', paddingBottom: 2 }}>Fill your bet</Text>
-                    <Text style={{ fontSize: 14, color: '#868686', fontStyle: 'italic', maxWidth: 300 }}>Mark as many numbers as you want up to a maximum of 50. Win by hitting 15, 16, 17, 18, 19, 20 or none of the 20 numbers drawn.</Text>
+                    <Text style={{ fontSize: 14, color: '#868686', fontStyle: 'italic', maxWidth: 300 }}>{game.description}</Text>
+                </View> : null}
+                {choseNumbers ? 
+                <View style={{ flexDirection: 'row', padding: 10, flexWrap: 'wrap' }}>
+                    {choseNumbers.map((num, i) => 
+                    <SelectedNumber onPress={() => handleRemove(num)} number={num} key={i} bgc={game.color} size={13} fontSize={12} hasX={true} />)}
                 </View>
-                <View style={{ width: 36, height: 6, backgroundColor: '#C1C1C1', margin: 10, borderRadius: 6, alignSelf: 'center' }}></View>
-                <ScrollView contentContainerStyle={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', paddingBottom: 200 }}>
+                : null}
+
+                {choseNumbers.length > 0 ? 
+                <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+                    <TouchableOpacity onPress={getRandomGame} style={{ borderWidth: 1, borderColor: '#B5C401', borderRadius: 4, padding: 5, marginRight: 10 }}>
+                        <Text style={{ color: '#B5C401', fontWeight: 'bold', fontSize: 13 }}>Complete game</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={clearGame} style={{ borderWidth: 1, borderColor: '#B5C401', borderRadius: 4, padding: 5, marginRight: 10 }}>
+                        <Text style={{ color: '#B5C401', fontWeight: 'bold', fontSize: 13 }}>Clear game</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ backgroundColor: '#B5C401', borderRadius: 4, padding: 5, width: '35%', alignItems: 'center' }}>
+                        <Text style={{ color: '#fff', fontSize: 13 }}><Ionicons name='cart-outline' size={20} color='#fff' />  Add to cart</Text>
+                    </TouchableOpacity>
+                </View> : null}
+
+                {game.type ? <View style={{ width: 36, height: 6, backgroundColor: '#C1C1C1', margin: 10, borderRadius: 6, alignSelf: 'center' }}></View> : null}
+                <ScrollView contentContainerStyle={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', paddingBottom: 250, height: 'auto' }}>
                     {currentGameRange && currentGameRange.map((num, i) => {
                         let selected = false;
                         if (choseNumbers.includes(num)) selected = true;
-                        let bgc = selected ? 'red' : '#ADC0C4';
+                        let bgc = selected ? game.color : '#ADC0C4';
                         return (
-                            <SelectedNumber bgc={bgc} onPress={() => selectNumber(num)} number={num} key={i} />
+                            <SelectedNumber 
+                                bgc={bgc} 
+                                onPress={() => selectNumber(num)} 
+                                number={num} 
+                                key={i} 
+                                size={20} 
+                                fontSize={18} 
+                            />
                         )
                     })}
                 </ScrollView>
