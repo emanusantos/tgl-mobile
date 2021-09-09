@@ -172,8 +172,8 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
             return;
         };
 
-        //total += game.price;
-        //setCart([...cart, { id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }]);
+        total += game.price;
+        setCart([...cart, { id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }]);
         navigation.openDrawer();
         clearGame();
     };
