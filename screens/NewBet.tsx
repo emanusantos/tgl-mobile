@@ -9,7 +9,7 @@ import { Game, GameResponse, Bet } from '../types/BetTypes';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderTitle from '../components/HeaderTitle';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
-import { addBet } from '../store/cartSlice';
+import { addBet, incrementTotal } from '../store/cartSlice';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
@@ -177,6 +177,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 
         total += game.price;
         dispatch(addBet({ id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }));
+        dispatch(incrementTotal(game.price));
         alert('Success')
         navigation.openDrawer();
         clearGame();
