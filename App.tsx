@@ -12,6 +12,8 @@ import FocusBar from './components/FocusBar';
 import { MaterialIcons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HeaderTitle from './components/HeaderTitle';
+import store from './store/store';
+import { Provider } from 'react-redux';
 
 export default function App() {
   const RootStack = createNativeStackNavigator();
@@ -69,9 +71,11 @@ export default function App() {
   );
 
   return (
-    <NavigationContainer>
-      <RootStackScreens />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <RootStackScreens />
+      </NavigationContainer>
+    </Provider>
   );
 };
 
