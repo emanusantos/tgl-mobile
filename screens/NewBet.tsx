@@ -5,12 +5,14 @@ import Cart from '../components/Cart';
 import BetButton from '../components/BetButton';
 import SelectedNumber from '../components/SelectedNumber';
 import { RootStackParamList } from '../types/FormScreenTypes';
-import { Game, GameResponse } from '../types/BetTypes';
+import { Game, GameResponse, Bet } from '../types/BetTypes';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderTitle from '../components/HeaderTitle';
 
 const cartDrawer = createDrawerNavigator();
 let currentGameRange: number[] = [];
+let gameid: number;
+let total = Number(0);
 
 function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Element {
     const drawer = useDrawerStatus();
@@ -26,6 +28,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         color: '',
         min_cart_value: 0
     });
+    const [cart, setCart] = useState<Bet[] | []>([]);
 
     useEffect(() => {
         getGames();
@@ -60,7 +63,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         if (e === 'Lotofácil') {
             currentGameRange = [];
             setGame(data[0]);
-            //gameid = data[0].id;
+            gameid = data[0].id;
             rangeHandler(data[0].range);
             setChoseNumbers([])
         };
@@ -68,7 +71,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         if (e === 'Mega-Sena') {
             currentGameRange = [];
             setGame(data[1])
-            //gameid = data[1].id;
+            gameid = data[1].id;
             rangeHandler(data[1].range);
             setChoseNumbers([])
         };
@@ -76,7 +79,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         if (e === 'Quina') {
             currentGameRange = [];
             setGame(data[2])
-            //gameid = data[2].id;
+            gameid = data[2].id;
             rangeHandler(data[2].range);
             setChoseNumbers([])
         };
@@ -151,9 +154,34 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
           return array
     };
 
+    const formatNumbers = (): string => {
+        let display = '';
+        choseNumbers!.sort((a: number, b: number) => a - b).forEach((item: number, index: number) => {
+            if (index !== choseNumbers!.length - 1) {
+                display += `${item < 10 ? `0${item}` : item}, `
+            } else {
+                display += item
+            }
+        })
+        return display;
+    };
+
+    const addItemToCart = (): void => {
+        if (choseNumbers!.length < game['max_number']) {
+            alert(`You need to select ${game['max_number'] - choseNumbers.length} more numbers to procceed with a ${game.type} bet.`);
+            return;
+        };
+
+        //total += game.price;
+        //setCart([...cart, { id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }]);
+        navigation.openDrawer();
+        clearGame();
+    };
+
     return (
         <>
         <HeaderTitle paddingH={15} paddingV={20} opacity={opacity} />
+        {choseNumbers.length > 0 ? <Ionicons onPress={() => navigation.openDrawer()} name='cart-outline' size={35} color='#B5C401' style={{ position: 'absolute', right: 60, top: 30 }} /> : null}
         <View style={{...styles.container, opacity: opacity}}>
             <View>
                 <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>NEW BET {game.type && `FOR ${game.type.toUpperCase()}`}</Text>
@@ -200,7 +228,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                     <TouchableOpacity onPress={clearGame} style={{ borderWidth: 1, borderColor: '#B5C401', borderRadius: 4, padding: 5, marginRight: 10 }}>
                         <Text style={{ color: '#B5C401', fontWeight: 'bold', fontSize: 13 }}>Clear game</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()} style={{ backgroundColor: '#B5C401', borderRadius: 4, padding: 5, width: '35%', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={addItemToCart} style={{ backgroundColor: '#B5C401', borderRadius: 4, padding: 5, width: '35%', alignItems: 'center' }}>
                         <Text style={{ color: '#fff', fontSize: 13 }}><Ionicons name='cart-outline' size={20} color='#fff' />  Add to cart</Text>
                     </TouchableOpacity>
                 </View> : null}

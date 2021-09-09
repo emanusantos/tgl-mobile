@@ -13,7 +13,7 @@ export interface Game {
 export default function GameDisplay({ color, numbers, date, price, type, trash }: Game): JSX.Element {
     return (
         <View style={{ paddingVertical: 10, paddingHorizontal: 5, flexDirection: 'row' }}>
-            <View style={{ height: 85, width: 6, backgroundColor: color, borderRadius: 100 }}></View>
+            <View style={{ height: 'auto', width: 6, backgroundColor: color, borderRadius: 100 }}></View>
             <View style={{ paddingHorizontal: 15 }}>
                 <Text style={{ color: '#868686', fontSize: 12, fontWeight: 'bold', fontStyle: 'italic' }}>{numbers}</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5 }}>

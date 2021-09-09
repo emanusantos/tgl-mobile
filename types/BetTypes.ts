@@ -20,3 +20,12 @@ export interface GameResponse {
     type: string;
     updated_at: string;
 };
+
+export interface Bet {
+    id: string;
+    game_id: number;
+    numbers: string;
+    price: number;
+    color: string;
+    type: string;
+};
