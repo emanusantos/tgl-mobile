@@ -9,8 +9,11 @@ import ResetPassword from './ResetPassword';
 import { Ref, RootStackParamList, SStyles } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 import axios from 'axios';
+import { authSession } from '../store/authSlice';
+import { useAppDispatch } from '../hooks/reduxHooks';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
+    const dispatch = useAppDispatch();
     const [userCredentials, setUserCredentials] = useState({
         email: '',
         password: ''
@@ -45,7 +48,8 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
             "email": userCredentials.email,
             "password": userCredentials.password
         }).then(res => {
-            alert(res.data.token);
+            dispatch(authSession(res.data.token));
+            navigation.navigate('HomeTabs');
         }).catch(err => {
             alert('Invalid email/password combination!');
         });

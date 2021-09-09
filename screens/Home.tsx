@@ -2,15 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import GameDisplay from '../components/GameDisplay';
 import BetButton from '../components/BetButton';
-import { GameResponse } from '../types/BetTypes';
+import { BetResponse, GameResponse } from '../types/BetTypes';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types/FormScreenTypes';
+import { setId } from '../store/authSlice';
+import axios from 'axios';
 
-const numbers: string = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
-
-export default function Home(): JSX.Element {
+export default function Home({ navigation }: NativeStackScreenProps<RootStackParamList, 'Login'>): JSX.Element {
+    const dispatch = useAppDispatch();
+    const token = useAppSelector(state => state.auth.token);
     useEffect(() => {
+        userCheck();
         getGames();
+        getBets();
     }, [])
     const [games, setGames] = useState<GameResponse[]>([]);
+    const [bets, setBets] = useState<BetResponse[]>([]);
+    const [filters, setFilters] = useState<string | null>(null);
 
     const getGames = async (): Promise<void> => {
         try {
@@ -23,17 +32,44 @@ export default function Home(): JSX.Element {
         };
     };
 
+    const getBets = async (): Promise<void> => {
+        await axios.get('http://10.0.0.103:3333/bet?page=1', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => {
+            alert(res.status);
+            setBets(res.data.data);
+            dispatch(setId(res.data.data[0].user_id));
+        })
+    };
+
+    const userCheck = (): void => {
+        if (!token) {
+            navigation.navigate('Login');
+        };
+    };
+
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>RECENT GAMES</Text>
             <Text style={{ fontSize: 17, fontStyle: 'italic', color: '#868686', paddingVertical: 15 }}>Filters</Text>
             <View style={{ flexDirection: 'row' }}>
-                <Text>botoes</Text>
+                {games && games.map((button) => {
+                    let color = button.color;
+                    let bgc = '#fff';
+                    let border = color;
+                    if (filters === button.type) {
+                        bgc = color;
+                        color = '#fff';
+                    };
+                    return (
+                        <BetButton color={color} bgc={bgc} border={border} type={button.type} onPress={() => setFilters(button.type)} />
+                    );
+                })}
             </View>
             <ScrollView style={{ marginTop: 20 }}>
-                <GameDisplay numbers={numbers} color='#01AC66' date='07/09/2020' price={2.50} type='Mega-Sena' trash={false}  />
-                <GameDisplay numbers={numbers} color='#01AC66' date='07/09/2020' price={2.50} type='Mega-Sena' trash={false}  />
-                <GameDisplay numbers={numbers} color='#01AC66' date='07/09/2020' price={2.50} type='Mega-Sena' trash={false}  />
+            <Text>nada</Text>
             </ScrollView>
         </View>
     );

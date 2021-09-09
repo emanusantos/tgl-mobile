@@ -10,6 +10,7 @@ export type RootStackParamList = {
     HomeTabs: undefined;
     Newbet: undefined;
     Cart: any;
+    Login: undefined;
 };
 
 export interface SStyles {

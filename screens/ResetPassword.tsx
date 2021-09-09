@@ -21,7 +21,8 @@ export default function ResetPassword({ stateStyle, setScreen }: ScreenProps): J
 
     const recovery = async (): Promise<void> => {
         await axios.post('http://10.0.0.103:3333/passwords', {
-            "email": email
+            "email": email,
+            "redirect_url": 'http://10.0.0.103:3333/recover'
         }).then(res => {
             alert('An recovery token was sent to your e-mail.');
         }).catch(err => {

@@ -29,3 +29,14 @@ export interface Bet {
     color: string;
     type: string;
 };
+
+export interface BetResponse {
+    id: number;
+    user_id: number;
+    game_id: number;
+    game: GameResponse;
+    numbers: string;
+    price: number;
+    updated_at: string;
+    created_at: string;
+};
