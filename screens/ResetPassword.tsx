@@ -4,9 +4,31 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { ScreenProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
+import axios from 'axios';
 
-export default function ResetPassword({ stateStyle, navigation, setScreen }: ScreenProps): JSX.Element {
+export default function ResetPassword({ stateStyle, setScreen }: ScreenProps): JSX.Element {
     const [email, setEmail] = useState('');
+
+    const submitHandler = (e: any): void => {
+        e.preventDefault();
+
+        if (!email.includes('@')) {
+            return alert('Please enter a valid email.');
+        };
+
+        recovery();
+    };
+
+    const recovery = async (): Promise<void> => {
+        await axios.post('http://10.0.0.103:3333/passwords', {
+            "email": email
+        }).then(res => {
+            alert('An recovery token was sent to your e-mail.');
+        }).catch(err => {
+            alert('Something went wrong with your recovery.');
+        });
+    };
+
     return (
         <View style={{...styles.container, opacity: stateStyle.opacity}}>
             <StatusBar style="auto" />
@@ -25,7 +47,7 @@ export default function ResetPassword({ stateStyle, navigation, setScreen }: Scr
                     keyboardType='email-address'
                     onChangeText={(text) => setEmail(text)}
                 />
-                <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
+                <TouchableOpacity onPress={(e) => submitHandler(e)}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Send link</Text>
                         <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />

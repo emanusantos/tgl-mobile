@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
+import axios from 'axios';
 
 export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps): JSX.Element {
     const [userCredentials, setUserCredentials] = useState({
@@ -11,6 +12,46 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
         email: '',
         password: ''
     });
+
+    const submitHandler = (e: any) => {
+        e.preventDefault();
+
+        if (userCredentials.name.length < 3) {
+            return alert('Please enter a valid name.')
+        };
+
+        if (!userCredentials.email.includes('@')) {
+            return alert('Please enter a valid e-mail.');
+        };
+
+        if (userCredentials.password.length <= 3) {
+            return alert('Your password length must be greater than 3.');
+        };
+
+        postData();
+    };
+
+    const postData = async (): Promise<void> => {
+        await axios.post('http://10.0.0.103:3333/users', {
+            "name": userCredentials.name,
+            "email": userCredentials.email,
+            "password": userCredentials.password
+        }).then(res => {
+            alert('Your account has been created succesfully. Log In with your brand-new credentials!');
+            resetFields();
+            navigation.navigate('Login');
+        }).catch(err => {
+            alert('Something went wrong creating your account.');
+        });
+    };
+
+    const resetFields = (): void => {
+        setUserCredentials({
+            name: '',
+            email: '',
+            password: ''
+        });
+    };
 
     return (
         <View style={{...styles.container, opacity: stateStyle.opacity}}>
@@ -52,7 +93,7 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
                     color='#C1C1C1' 
                     style={{ position: 'absolute', bottom: 100, right: 20 }}
                 />
-                <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
+                <TouchableOpacity onPress={(e) => submitHandler(e)}>
                     <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Register</Text>
                         <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />

@@ -8,6 +8,7 @@ import SignUp from './SignUp';
 import ResetPassword from './ResetPassword';
 import { Ref, RootStackParamList, SStyles } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
+import axios from 'axios';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
     const [userCredentials, setUserCredentials] = useState({
@@ -20,7 +21,16 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     const imgRef = useRef<Image & Ref>(null);
     const handleLogin = (event: any) => {
         event.preventDefault();
-        alert(`${userCredentials.email}, ${userCredentials.password}`);
+
+        if (!userCredentials.email.includes('@')) {
+            return alert('Please enter a valid e-mail.');
+        };
+
+        if (userCredentials.password.length <= 3) {
+            return alert('Your password is invalid.');
+        };
+
+        postAuth();
     };
 
     const animationEnd = (): void => {
@@ -29,8 +39,17 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
             imgRef.current!.animate('fadeOutUpBig', 1000);
         }, 1000);
     };
-
    
+    const postAuth = async (): Promise<void> => {
+        await axios.post('http://10.0.0.103:3333/sessions', {
+            "email": userCredentials.email,
+            "password": userCredentials.password
+        }).then(res => {
+            alert(res.data.token);
+        }).catch(err => {
+            alert('Invalid email/password combination!');
+        });
+    };
 
     if (screen === 'Login') {
         return (
