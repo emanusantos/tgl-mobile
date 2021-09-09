@@ -18,12 +18,19 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     const [screen, setScreen] = useState<string>('Login');
     const [style, setStyle] = useState<SStyles>({ opacity: .5, elevation: 0 });
     const imgRef = useRef<Image & Ref>(null);
+    const handleLogin = (event: any) => {
+        event.preventDefault();
+        alert(`${userCredentials.email}, ${userCredentials.password}`);
+    };
+
     const animationEnd = (): void => {
         setTimeout(() => {
             setStyle({ opacity: 1, elevation: 8 });
             imgRef.current!.animate('fadeOutUpBig', 1000);
         }, 1000);
     };
+
+   
 
     if (screen === 'Login') {
         return (
@@ -73,7 +80,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                     >
                         I forget my password
                     </Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('HomeTabs')}>
+                    <TouchableOpacity onPress={(e) => handleLogin(e)}>
                         <View style={{ paddingVertical: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ color: '#B5C401', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>Log In</Text>
                             <Ionicons style={{ marginTop: 5, marginLeft: 8 }} name="arrow-forward-outline" size={30} color='#B5C401' />

@@ -13,7 +13,7 @@ export default function Save() {
         } else {
             dispatch(saveCart());
             alert('Success!');
-        }
+        };
     };
 
     return (
