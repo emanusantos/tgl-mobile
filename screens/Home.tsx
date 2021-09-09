@@ -33,7 +33,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
     };
 
     const getBets = async (): Promise<void> => {
-        await axios.get('http://10.0.0.103:3333/bet?page=1', {
+        await axios.get('http://10.0.0.103:3333/bets?page=1', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -50,6 +50,16 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
         };
     };
 
+    const filterHandler = (type: string): void => {
+        if (filters === type) {
+            return setFilters(null);
+        };
+
+        setFilters(type);
+    };
+
+    const filteredData = bets.filter((bet: BetResponse) => bet.game.type === filters);
+
     return (
         <View style={styles.container}>
             <Text style={{ fontSize: 22, fontStyle: 'italic', fontWeight: 'bold', color: '#707070' }}>RECENT GAMES</Text>
@@ -64,12 +74,18 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
                         color = '#fff';
                     };
                     return (
-                        <BetButton color={color} bgc={bgc} border={border} type={button.type} onPress={() => setFilters(button.type)} />
+                        <BetButton color={color} bgc={bgc} border={border} key={button.type} type={button.type} onPress={() => filterHandler(button.type)} />
                     );
                 })}
             </View>
             <ScrollView style={{ marginTop: 20 }}>
-            <Text>nada</Text>
+                {filters && filteredData.map((bet) => (
+                    <GameDisplay key={bet.id} color={bet.game.color} numbers={bet.numbers} date={bet.created_at.substr(0, 10)} price={bet.price} type={bet.game.type} trash={false} />
+                ))}
+
+                {!filters && bets && bets.map((bet) => (
+                    <GameDisplay key={bet.id} color={bet.game.color} numbers={bet.numbers} date={bet.created_at.substr(0, 10)} price={bet.price} type={bet.game.type} trash={false} />
+                ))}
             </ScrollView>
         </View>
     );
