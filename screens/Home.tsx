@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import GameDisplay from '../components/GameDisplay';
 import BetButton from '../components/BetButton';
 import { BetResponse, GameResponse } from '../types/BetTypes';
@@ -10,13 +10,17 @@ import { setId } from '../store/authSlice';
 import axios from 'axios';
 
 export default function Home({ navigation }: NativeStackScreenProps<RootStackParamList, 'Login'>): JSX.Element {
+    const limit = useRef(3);
     const dispatch = useAppDispatch();
     const token = useAppSelector(state => state.auth.token);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
     useEffect(() => {
+        setLoading(true);
         userCheck();
         getGames();
         getBets();
-    }, [navigation])
+    }, [navigation, currentPage])
     const [games, setGames] = useState<GameResponse[]>([]);
     const [bets, setBets] = useState<BetResponse[]>([]);
     const [filters, setFilters] = useState<string | null>(null);
@@ -33,14 +37,17 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
     };
 
     const getBets = async (): Promise<void> => {
-        await axios.get('http://10.0.0.103:3333/bets?page=1', {
+        await axios.get(`http://10.0.0.103:3333/bets?page=${currentPage}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         }).then(res => {
-            alert(res.status);
-            setBets(res.data.data);
-            dispatch(setId(res.data.data[0].user_id));
+            setBets(bets.concat(res.data.data));
+            if (currentPage === 1) {
+                dispatch(setId(res.data.data[0].user_id));
+            };
+            limit.current = res.data.page;
+            setLoading(false);
         })
     };
 
@@ -58,7 +65,38 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
         setFilters(type);
     };
 
+    const moreBets = (): void => {
+        if (currentPage > limit.current) {
+            return;
+        };
+
+        setCurrentPage(currentPage + 1);
+        setLoading(true);
+    };
+
     const filteredData = bets.filter((bet: BetResponse) => bet.game.type === filters);
+
+    const Footer = () => {
+        return (
+            loading ?
+            <View>
+                <ActivityIndicator size='large' />
+            </View> : null
+        );
+    };
+
+    const renderItem = ({ item }: any) => (
+            <GameDisplay
+                color={item.game.color} 
+                numbers={item.numbers} 
+                date={item.created_at.substr(0, 10)} 
+                price={item.price} 
+                type={item.game.type}
+                trash={false} 
+            />
+    );
+
+    const memoizate = useMemo(() => renderItem, [bets, filters]);
 
     return (
         <View style={styles.container}>
@@ -78,15 +116,16 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
                     );
                 })}
             </View>
-            <ScrollView style={{ marginTop: 20 }}>
-                {filters && filteredData.map((bet) => (
-                    <GameDisplay key={bet.id} color={bet.game.color} numbers={bet.numbers} date={bet.created_at.substr(0, 10)} price={bet.price} type={bet.game.type} trash={false} />
-                ))}
-
-                {!filters && bets && bets.map((bet) => (
-                    <GameDisplay key={bet.id} color={bet.game.color} numbers={bet.numbers} date={bet.created_at.substr(0, 10)} price={bet.price} type={bet.game.type} trash={false} />
-                ))}
-            </ScrollView>
+            <FlatList 
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(bet, index) => index.toString()}
+                style={{ marginTop: 20 }} 
+                data={filters ? filteredData : bets} 
+                ListFooterComponent={Footer}
+                onEndReached={moreBets}
+                onEndReachedThreshold={0.5}
+                renderItem={memoizate}
+            />
         </View>
     );
 };
