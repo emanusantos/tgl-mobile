@@ -8,6 +8,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/FormScreenTypes';
 import { setId } from '../store/authSlice';
 import axios from 'axios';
+import * as Progress from 'react-native-progress';
 
 export default function Home({ navigation }: NativeStackScreenProps<RootStackParamList, 'Login'>): JSX.Element {
     const limit = useRef(3);
@@ -71,7 +72,6 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
         };
 
         setCurrentPage(currentPage + 1);
-        setLoading(true);
     };
 
     const filteredData = bets.filter((bet: BetResponse) => bet.game.type === filters);

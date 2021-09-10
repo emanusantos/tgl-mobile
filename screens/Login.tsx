@@ -14,6 +14,7 @@ import { useAppDispatch } from '../hooks/reduxHooks';
 import * as Progress from 'react-native-progress';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
+    const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const [userCredentials, setUserCredentials] = useState({
         email: '',
@@ -23,17 +24,24 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     const [screen, setScreen] = useState<string>('Login');
     const [style, setStyle] = useState<SStyles>({ opacity: .5, elevation: 0 });
     const imgRef = useRef<Image & Ref>(null);
+
     const handleLogin = (event: any) => {
+        setLoading(true);
         event.preventDefault();
 
         if (!userCredentials.email.includes('@')) {
+            setLoading(false);
             return alert('Please enter a valid e-mail.');
         };
 
         if (userCredentials.password.length <= 3) {
+            setLoading(false);
             return alert('Your password is invalid.');
         };
 
+        setTimeout(() => {
+            setStyle({ opacity: .5, elevation: 0 });
+        }, 1000);
         postAuth();
     };
 
@@ -51,9 +59,19 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
         }).then(res => {
             dispatch(authSession(res.data.token));
             navigation.navigate('HomeTabs');
+            setLoading(false);
         }).catch(err => {
+            setLoading(false);
             alert('Invalid email/password combination!');
         });
+    };
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Progress.Circle size={150} color='#B5C401' indeterminate={true} animated={true} />
+            </View>
+        );
     };
 
     if (screen === 'Login') {
@@ -118,7 +136,6 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                     Sign Up 
                     <Ionicons name="arrow-forward-outline" size={30} color='#707070' />
                 </Text>
-                <Progress.Circle size={30} indeterminate={true} color='#000' />
             </View>
             </>
         );
