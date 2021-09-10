@@ -85,7 +85,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
         );
     };
 
-    const renderItem = ({ item }: any) => (
+    const renderItem = ({ item }: { item: BetResponse }) => (
             <GameDisplay
                 color={item.game.color} 
                 numbers={item.numbers} 

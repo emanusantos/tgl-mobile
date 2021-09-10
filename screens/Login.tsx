@@ -11,6 +11,7 @@ import { styles } from '../styles/LoginStyleSheet';
 import axios from 'axios';
 import { authSession } from '../store/authSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
+import * as Progress from 'react-native-progress';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
     const dispatch = useAppDispatch();
@@ -117,6 +118,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                     Sign Up 
                     <Ionicons name="arrow-forward-outline" size={30} color='#707070' />
                 </Text>
+                <Progress.Circle size={30} indeterminate={true} color='#000' />
             </View>
             </>
         );
