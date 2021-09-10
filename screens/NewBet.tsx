@@ -31,7 +31,6 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         color: '',
         min_cart_value: 0
     });
-    const [cart, setCart] = useState<Bet[] | []>([]);
 
     useEffect(() => {
         getGames();
@@ -178,7 +177,6 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         total += game.price;
         dispatch(addBet({ id: Date.now().toString(), game_id: gameid, numbers: formatNumbers(), price: game.price, color: game.color, type: game.type }));
         dispatch(incrementTotal(game.price));
-        alert('Success')
         navigation.openDrawer();
         clearGame();
     };

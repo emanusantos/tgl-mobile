@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
 import { Ionicons } from '@expo/vector-icons';
-import { saveCart } from '../store/cartSlice';
+import { saveCart, reset } from '../store/cartSlice';
 import axios from 'axios';
 
 export default function Save() {
@@ -21,7 +21,6 @@ export default function Save() {
                 "Authorization": `Bearer ${token}`
             }
         }).then(res => {
-            alert(res.status);
         }).catch(err => {
             alert(err);
         });
@@ -33,6 +32,8 @@ export default function Save() {
         } else {
             dispatch(saveCart());
             postBets();
+            alert('Your cart was saved successfully. Go to the Home screen to display your purchased bets');
+            dispatch(reset());
         };
     };
 

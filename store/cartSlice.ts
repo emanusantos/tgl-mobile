@@ -20,6 +20,10 @@ const cartSlice = createSlice({
             state.savedCart = newArr;
             return
         },
+        reset: (state) => {
+            state.cart = initialState.cart;
+            state.total = initialState.total;
+        },
         incrementTotal: (state, action) => {
             let newTotal = state.total + action.payload;
             state.total = newTotal;
@@ -33,5 +37,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { addBet, removeBet, incrementTotal, decrementTotal, saveCart } = cartSlice.actions;
+export const { addBet, removeBet, incrementTotal, decrementTotal, saveCart, reset } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;

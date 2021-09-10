@@ -5,12 +5,13 @@ import BetButton from '../components/BetButton';
 import { BetResponse, GameResponse } from '../types/BetTypes';
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useIsFocused } from '@react-navigation/native';
 import { RootStackParamList } from '../types/FormScreenTypes';
 import { setId } from '../store/authSlice';
 import axios from 'axios';
-import * as Progress from 'react-native-progress';
 
 export default function Home({ navigation }: NativeStackScreenProps<RootStackParamList, 'Login'>): JSX.Element {
+    const isFocused = useIsFocused();
     const limit = useRef(3);
     const dispatch = useAppDispatch();
     const token = useAppSelector(state => state.auth.token);
@@ -44,7 +45,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
             }
         }).then(res => {
             setBets(bets.concat(res.data.data));
-            if (currentPage === 1) {
+            if (currentPage === 1 && bets.length >= 1) {
                 dispatch(setId(res.data.data[0].user_id));
             };
             limit.current = res.data.page;
@@ -116,7 +117,9 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
                     );
                 })}
             </View>
-            <FlatList 
+            {bets.length === 0 
+            ? <Text style={{ fontSize: 16, fontStyle: 'italic', paddingTop: 100 }}>Seems like you don't have any bet yet. Don't waste your time, start betting now!</Text> 
+            : <FlatList 
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(bet, index) => index.toString()}
                 style={{ marginTop: 20 }} 
@@ -125,7 +128,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
                 onEndReached={moreBets}
                 onEndReachedThreshold={0.5}
                 renderItem={memoizate}
-            />
+            />}
         </View>
     );
 };

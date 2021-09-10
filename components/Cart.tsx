@@ -9,6 +9,8 @@ import Save from './Save';
 const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
 
 export default function Cart({ navigation }: DrawerContentComponentProps): JSX.Element {
+    const navigate = () => {navigation.navigate('Home')};
+
     return (
         <View style={{ flex: 1 }}>
             <Foundation name='x' size={25} color='#B5C401' style={{ alignSelf: 'flex-end', padding: 20, marginTop: 25 }} onPress={() => {navigation.closeDrawer()}} />

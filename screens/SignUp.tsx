@@ -4,9 +4,12 @@ import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { authSession } from '../store/authSlice';
 import axios from 'axios';
 
 export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps): JSX.Element {
+    const dispatch = useAppDispatch();
     const [userCredentials, setUserCredentials] = useState({
         name: '',
         email: '',
@@ -38,10 +41,22 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
             "password": userCredentials.password
         }).then(res => {
             alert('Your account has been created succesfully. Log In with your brand-new credentials!');
+            postAuth();
             resetFields();
-            navigation.navigate('Login');
         }).catch(err => {
             alert('Something went wrong creating your account.');
+        });
+    };
+
+    const postAuth = async (): Promise<void> => {
+        await axios.post('http://10.0.0.103:3333/sessions', {
+            "email": userCredentials.email,
+            "password": userCredentials.password
+        }).then(res => {
+            dispatch(authSession(res.data.token));
+            navigation.navigate('HomeTabs');
+        }).catch(err => {
+            alert('Invalid email/password combination!');
         });
     };
 
