@@ -246,7 +246,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 
                 {game.type ? <View style={{ width: 36, height: 6, backgroundColor: '#C1C1C1', margin: 10, borderRadius: 6, alignSelf: 'center' }}></View> : null}
                 <ScrollView contentContainerStyle={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', paddingBottom: 250, height: 'auto' }}>
-                    {currentGameRange && currentGameRange.map((num, i) => {
+                    {currentGameRange ? currentGameRange.map((num, i) => {
                         let selected = false;
                         if (choseNumbers.includes(num)) selected = true;
                         let bgc = selected ? game.color : '#ADC0C4';
@@ -260,7 +260,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
                                 fontSize={18} 
                             />
                         )
-                    })}
+                    }) : null}
                 </ScrollView>
             </View>
         </View>

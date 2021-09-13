@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons, Foundation } from '@expo/vector-icons';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
@@ -8,9 +8,12 @@ import { reset } from '../store/cartSlice';
 import axios from 'axios';
 import CartInfo from './CartInfo';
 import Total from './Total';
+import Error from './Error';
 
+let message: string;
 
 export default function Cart({ navigation }: DrawerContentComponentProps): JSX.Element {
+    const [modalVisible, setModalVisible] = useState(false);
     const dispatch = useAppDispatch();
     const total = useAppSelector(state => state.cart.total);
     const bets = useAppSelector(state => state.cart.cart);
@@ -19,7 +22,7 @@ export default function Cart({ navigation }: DrawerContentComponentProps): JSX.E
     const postedData = rest.map(({ game_id, numbers }) => ({ game_id, numbers }));
 
     const postBets = async (): Promise<void> => {
-        await axios.post('http://10.0.0.103:3333/bets', {
+        await axios.post('http://192.168.0.7:3333/bets', {
             'betCart': postedData
         }, {
             headers: {
@@ -33,17 +36,28 @@ export default function Cart({ navigation }: DrawerContentComponentProps): JSX.E
 
     const handleSave = (): void => {
         if (total < 30) {
-            return alert("You can't save your cart with less than R$30,00 in bets.");
+            message = "You can't save your cart with less than R$30,00 in bets.";
+            return toggleModal();
         } else {
             postBets();
-            alert('Your cart was saved successfully. Go to the Home screen to see your newly purchased bets!');
+            message = 'Your cart was saved successfully. Go to the Home screen to see your newly purchased bets!';
             navigation.closeDrawer();
+            toggleModal();
             dispatch(reset());
         };
     };
 
+    const toggleModal = () => {
+        if (!modalVisible) {
+            setModalVisible(true);
+        } else {
+            setModalVisible(false);
+        }
+    };
+
     return (
         <View style={{ flex: 1 }}>
+            <Error modalVisible={modalVisible} toggleModal={toggleModal} message={message} />
             <Foundation name='x' size={25} color='#B5C401' style={{ alignSelf: 'flex-end', padding: 20, marginTop: 25 }} onPress={() => {navigation.closeDrawer()}} />
             <View style={{ flexDirection: 'row', paddingLeft: 10 }}>
                 <MaterialCommunityIcons name='cart-outline' size={35} color='#B5C401' />

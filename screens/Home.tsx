@@ -13,12 +13,20 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
     const token = useAppSelector(state => state.auth.token);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
+
     useEffect(() => {
         setLoading(true);
         userCheck();
         getGames();
         getBets();
-    }, [navigation, currentPage])
+    }, [currentPage]);
+
+    useEffect(() => {
+        navigation.addListener('focus', () => {
+            memoizate;
+        });
+    });
+
     const [games, setGames] = useState<GameResponse[]>([]);
     const [bets, setBets] = useState<BetResponse[]>([]);
     const [filters, setFilters] = useState<string | null>(null);
@@ -41,8 +49,10 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
             }
         }).then(res => {
             setBets(bets.concat(res.data.data));
-            limit.current = res.data.page;
+            limit.current = res.data.lastPage;
             setLoading(false);
+        }).catch(err => {
+            alert(err.message);
         })
     };
 
@@ -65,7 +75,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
             return;
         };
 
-        setCurrentPage(currentPage + 1);
+        return setCurrentPage(currentPage + 1);
     };
 
     const filteredData = bets.filter((bet: BetResponse) => bet.game.type === filters);

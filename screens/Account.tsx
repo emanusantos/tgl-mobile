@@ -5,10 +5,13 @@ import { useAppSelector } from '../hooks/reduxHooks';
 import { User } from '../types/BetTypes';
 import axios from 'axios';
 
+let messageColor: string;
+
 export default function Account(): JSX.Element {
     const userId = useAppSelector(state => state.auth.id);
     const [editName, setEditName] = useState<boolean>(false);
     const [editEmail, setEditEmail] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
     const [userCredentials, setUserCredentials] = useState({
         name: '',
         email: ''
@@ -39,7 +42,7 @@ export default function Account(): JSX.Element {
         .then((response) => {
             setUser(response.data);
             setUserCredentials({ ...userCredentials, name: '' })
-            alert('Your name has successfully changed.')
+            successHandler('name');
         })
         .catch((err) => {
             alert(err);
@@ -52,8 +55,8 @@ export default function Account(): JSX.Element {
         })
         .then((response) => {
             setUser(response.data);
-            setUserCredentials({ ...userCredentials, email: '' })
-            alert('Your email has successfully changed.')
+            setUserCredentials({ ...userCredentials, email: '' });
+            successHandler('email');
         })
         .catch((err) => {
             alert(err);
@@ -62,7 +65,7 @@ export default function Account(): JSX.Element {
 
     const handleEmailSubmit = (): void => {
         if (!userCredentials.email.includes('@')) {
-            return alert('Please enter a valid email.')
+            return failHandler('email');
         };
 
         editUserEmail();
@@ -70,10 +73,20 @@ export default function Account(): JSX.Element {
 
     const handleNameSubmit = (): void => {
         if (userCredentials.name.length < 3) {
-            return alert('Please enter a valid name.')
+            return failHandler('name');
         };
 
         editUserName();
+    };
+
+    const successHandler = (type: string): void => {
+        messageColor = 'green';
+        setMessage(`Your ${type} has successfully changed.`);
+    };
+
+    const failHandler = (type: string): void => {
+        messageColor = 'red';
+        setMessage(`Please enter a valid ${type}.`);
     };
 
     return (
@@ -90,6 +103,7 @@ export default function Account(): JSX.Element {
                     <Ionicons name='checkmark-circle-outline' size={20} color='#B5C401' style={{ padding: 20 }} onPress={() => handleNameSubmit()} />
                 </TouchableOpacity>
             </View>}
+            {message ? <Text style={{ padding: 10, fontSize: 12, fontWeight: 'bold', fontStyle: 'italic', color: messageColor }}>{message}</Text> : null}
             <View style={{ flexDirection: 'row', paddingVertical: 20 }}>
                 <Text style={{...styles.text, fontWeight: 'bold' }}>Email: </Text>
                 <Text style={styles.text}>{user.email ? user.email : 'example@example.com'}</Text>

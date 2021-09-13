@@ -15,7 +15,7 @@ export default function HeaderTitle({ padding, paddingH, paddingV, opacity, navi
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: '#fff', padding: padding, opacity: opacity }}>
-            <View style={{ alignItems: 'center', paddingBottom: 15, paddingHorizontal: paddingH, paddingVertical: paddingV }}>
+            <View style={{ alignItems: 'center', paddingBottom: 10, paddingHorizontal: paddingH, paddingVertical: paddingV }}>
                 <Text style={{ color: '#707070', fontSize: 30, fontStyle: 'italic', fontWeight: 'bold' }}>TGL</Text>
                 <View style={{ width: 70, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
             </View>

@@ -48,10 +48,6 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
             errorMessage = 'Please enter a valid password.';
             return setModalVisible(true);
         };
-
-        setTimeout(() => {
-            setStyle({ opacity: .5, elevation: 0 });
-        }, 1000);
         postAuth();
     };
 
@@ -107,7 +103,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
  
     if (loading) {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
                 <Progress.Circle size={150} color='#B5C401' indeterminate={true} animated={true} />
             </View>
         );
