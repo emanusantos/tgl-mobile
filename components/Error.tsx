@@ -57,15 +57,17 @@ const styles = StyleSheet.create({
       backgroundColor: "#F194FF",
     },
     buttonClose: {
-      backgroundColor: "#2196F3",
+      backgroundColor: "#B5C401",
     },
     textStyle: {
       color: "white",
       fontWeight: "bold",
-      textAlign: "center"
+      textAlign: "center",
+      fontStyle: 'italic'
     },
     modalText: {
       marginBottom: 15,
-      textAlign: "center"
+      textAlign: "center",
+      fontStyle: 'italic'
     }
 });

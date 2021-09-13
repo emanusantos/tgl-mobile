@@ -2,18 +2,24 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { ScreenProps } from '../types/FormScreenTypes';
+import { ScreenProps, SStyles } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
+import Error from '../components/Error';
 import axios from 'axios';
 
-export default function ResetPassword({ stateStyle, setScreen }: ScreenProps): JSX.Element {
+let message: string;
+
+export default function ResetPassword({ setScreen }: ScreenProps): JSX.Element {
     const [email, setEmail] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [style, setStyle] = useState<SStyles>({ opacity: 1, elevation: 8 });
 
     const submitHandler = (e: NativeSyntheticEvent<NativeTouchEvent>): void => {
         e.preventDefault();
 
         if (!email.includes('@')) {
-            return alert('Please enter a valid email.');
+            message = 'Please enter a valid email.'
+            return toggleModal();
         };
 
         recovery();
@@ -24,21 +30,34 @@ export default function ResetPassword({ stateStyle, setScreen }: ScreenProps): J
             "email": email,
             "redirect_url": 'http://192.168.0.7:3333/recover'
         }).then(res => {
-            alert('An recovery token was sent to your e-mail.');
+            message = 'An recovery token was sent to your email.'
+            toggleModal();
         }).catch(err => {
-            alert('Something went wrong with your recovery.');
+            message = 'Something went wrong with your recovery.'
+            toggleModal();
         });
     };
 
+    const toggleModal = () => {
+        if (!modalVisible) {
+            setModalVisible(true);
+            setStyle({ elevation: 0, opacity: .5 });
+        } else {
+            setStyle({ elevation: 8, opacity: 1 })
+            setModalVisible(false);
+        }
+    };
+
     return (
-        <View style={{...styles.container, opacity: stateStyle.opacity}}>
+        <View style={{...styles.container, opacity: style.opacity}}>
+            {modalVisible ? <Error modalVisible={modalVisible} message={message} toggleModal={toggleModal} /> : null}
             <StatusBar style="auto" />
             <View style={styles.header}>
                 <Text style={styles.tgl}>TGL</Text>
                 <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
             </View>
             <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Reset Password</Text>
-            <View style={{...styles.box, elevation: stateStyle.opacity}}>
+            <View style={{...styles.box, elevation: style.elevation}}>
                 <TextInput
                     value={email}
                     placeholder='Email' 

@@ -18,6 +18,7 @@ import Error from '../components/Error';
 let errorMessage: string;
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
+    const limit = useRef(0);
     const [loading, setLoading] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const [userCredentials, setUserCredentials] = useState({
@@ -58,6 +59,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
         setTimeout(() => {
             setStyle({ opacity: 1, elevation: 8 });
             imgRef.current!.animate('fadeOutUpBig', 1000);
+            limit.current = 1;
         }, 1000);
     };
    
@@ -73,7 +75,8 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
             setLoading(false);
         }).catch(err => {
             setLoading(false);
-            alert('Invalid email/password combination!');
+            errorMessage = 'Something went wrong with your login request. Please check your fields and try again.';
+            toggleModal();
         });
     };
 
@@ -83,7 +86,8 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
             const id = res.data[index].id;
             dispatch(setId(id));
         }).catch(err => {
-            alert(err);
+            errorMessage = err.message;
+            toggleModal();
         })
     };
 
@@ -112,13 +116,13 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     if (screen === 'Login') {
         return (
             <>
-            <Animatable.Image
+            {limit.current === 0 ? <Animatable.Image
                 animation='fadeInUpBig'
                 duration={1500}
                 ref={imgRef}
                 onAnimationEnd={animationEnd}
                 style={styles.img} source={require('../assets/splash.png')} 
-            />
+            /> : null}
             {modalVisible 
             ? <Error 
                 modalVisible={modalVisible} 

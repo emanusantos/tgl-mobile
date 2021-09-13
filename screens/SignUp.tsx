@@ -2,33 +2,42 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
-import { SignUpProps } from '../types/FormScreenTypes';
+import { SignUpProps, SStyles } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import { authSession } from '../store/authSlice';
+import Error from '../components/Error';
 import axios from 'axios';
 
-export default function SignUp({ stateStyle, visible, setVisible, setScreen, navigation }: SignUpProps): JSX.Element {
+let message: string;
+
+export default function SignUp({ visible, setVisible, setScreen, navigation }: SignUpProps): JSX.Element {
     const dispatch = useAppDispatch();
     const [userCredentials, setUserCredentials] = useState({
         name: '',
         email: '',
         password: ''
     });
+    const [modalVisible, setModalVisible] = useState(false);
+    const [style, setStyle] = useState<SStyles>({ opacity: 1, elevation: 8 });
+
 
     const submitHandler = (e: NativeSyntheticEvent<NativeTouchEvent>) => {
         e.preventDefault();
 
         if (userCredentials.name.length < 3) {
-            return alert('Please enter a valid name.')
+            message = 'Please enter a valid name.';
+            return toggleModal();
         };
 
         if (!userCredentials.email.includes('@')) {
-            return alert('Please enter a valid e-mail.');
+            message = 'Please enter a valid email.';
+            return toggleModal();
         };
 
         if (userCredentials.password.length <= 3) {
-            return alert('Your password length must be greater than 3.');
+            message = 'Your password length must be greater than 3.';
+            return toggleModal();
         };
 
         postData();
@@ -40,11 +49,13 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
             "email": userCredentials.email,
             "password": userCredentials.password
         }).then(res => {
-            alert('Your account has been created succesfully. Log In with your brand-new credentials!');
+            message = 'Your account has been created successfully.'
+            toggleModal();
             postAuth();
             resetFields();
         }).catch(err => {
-            alert('Something went wrong creating your account.');
+            message = 'Something went wrong creating your account. Please try again later.'
+            toggleModal();
         });
     };
 
@@ -56,7 +67,7 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
             dispatch(authSession(res.data.token));
             navigation.navigate('HomeTabs');
         }).catch(err => {
-            alert('Invalid email/password combination!');
+            alert(err.message);
         });
     };
 
@@ -68,15 +79,26 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
         });
     };
 
+    const toggleModal = () => {
+        if (!modalVisible) {
+            setModalVisible(true);
+            setStyle({ elevation: 0, opacity: .5 });
+        } else {
+            setStyle({ elevation: 8, opacity: 1 })
+            setModalVisible(false);
+        }
+    };
+
     return (
-        <View style={{...styles.container, opacity: stateStyle.opacity}}>
+        <View style={{...styles.container, opacity: style.opacity}}>
             <StatusBar style='auto' />
+            <Error modalVisible={modalVisible} toggleModal={toggleModal} message={message} />
             <View style={styles.header}>
                 <Text style={styles.tgl}>TGL</Text>
                 <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
             </View>
             <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Registration</Text>
-            <View style={{...styles.box, elevation: stateStyle.elevation}}>
+            <View style={{...styles.box, elevation: style.elevation}}>
                 <TextInput 
                     value={userCredentials.name}
                     placeholder='Name' 
