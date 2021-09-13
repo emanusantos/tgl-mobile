@@ -13,6 +13,9 @@ import { authSession, setId } from '../store/authSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import * as Progress from 'react-native-progress';
 import { User } from '../types/BetTypes';
+import Error from '../components/Error';
+
+let errorMessage: string;
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
     const [loading, setLoading] = useState<boolean>(false);
@@ -22,6 +25,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
         password: ''
     });
     const [visible, setVisible] = useState<boolean>(true);
+    const [modalVisible, setModalVisible] = useState(false);
     const [screen, setScreen] = useState<string>('Login');
     const [style, setStyle] = useState<SStyles>({ opacity: .5, elevation: 0 });
     const imgRef = useRef<Image & Ref>(null);
@@ -32,12 +36,16 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
 
         if (!userCredentials.email.includes('@')) {
             setLoading(false);
-            return alert('Please enter a valid e-mail.');
+            setStyle({ elevation: 0, opacity: .5 });
+            errorMessage = 'Please enter a valid email.';
+            return setModalVisible(true);
         };
 
         if (userCredentials.password.length <= 3) {
             setLoading(false);
-            return alert('Your password is invalid.');
+            setStyle({ elevation: 0, opacity: .5 });
+            errorMessage = 'Please enter a valid password.';
+            return setModalVisible(true);
         };
 
         setTimeout(() => {
@@ -83,6 +91,16 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
         setUserCredentials({ email: '', password: '' });
     };
 
+    const toggleModal = () => {
+        if (!modalVisible) {
+            setModalVisible(true);
+            setStyle({ elevation: 0, opacity: .5 });
+        } else {
+            setStyle({ elevation: 8, opacity: 1 })
+            setModalVisible(false);
+        }
+    };
+ 
     if (loading) {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -101,6 +119,12 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                 onAnimationEnd={animationEnd}
                 style={styles.img} source={require('../assets/splash.png')} 
             />
+            {modalVisible 
+            ? <Error 
+                modalVisible={modalVisible} 
+                toggleModal={toggleModal} 
+                message={errorMessage} /> 
+            : null}
             <View style={{...styles.container, opacity: style.opacity}}>
             <StatusBar style="auto" />
                 <View style={styles.header}>
