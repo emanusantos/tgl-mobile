@@ -32,7 +32,7 @@ export default function App() {
     </Drawer.Navigator>
   );
   
-  const TabScreens = () => (
+  const TabScreens = ({ navigation }: any) => (
     <Tabs.Navigator screenOptions={{ 
       tabBarShowLabel: false,  
       tabBarStyle: { height: 71.8, borderTopLeftRadius: 25, borderTopRightRadius: 25 } }}>
@@ -42,7 +42,7 @@ export default function App() {
           <MaterialCommunityIcons name='home-outline' size={35} color={focused ? '#B5C401' : '#C1C1C1'} />
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Home</Text>
         </View>
-      ), headerTitle: () => (<HeaderTitle />) }} />
+      ), headerTitle: () => (<HeaderTitle navigation={navigation} />) }} />
       <Tabs.Screen 
       name='Newbet' 
       component={NewBetCart} 
@@ -58,7 +58,7 @@ export default function App() {
           <Text style={{...styles.label, color: focused ? '#707070' : '#C1C1C1', fontWeight: focused ? 'bold' : 'normal' }}>Account</Text>
         </View>
       ), 
-      headerTitle: () => (<HeaderTitle />) }} />
+      headerTitle: () => (<HeaderTitle navigation={navigation} />) }} />
     </Tabs.Navigator>
   );
 

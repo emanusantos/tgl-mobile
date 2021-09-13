@@ -191,7 +191,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 
     return (
         <>
-        <HeaderTitle paddingH={15} paddingV={20} opacity={opacity} />
+        <HeaderTitle navigation={navigation} paddingH={15} paddingV={20} opacity={opacity} />
         {choseNumbers.length > 0 ? <Ionicons onPress={() => navigation.openDrawer()} name='cart-outline' size={35} color='#B5C401' style={{ position: 'absolute', right: 60, top: 30 }} /> : null}
         <View style={{...styles.container, opacity: opacity}}>
             <View>

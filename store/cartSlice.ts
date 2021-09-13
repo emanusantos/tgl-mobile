@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Bet } from '../types/BetTypes';
 
-const initialState: { cart: Bet[], savedCart: Bet[], total: number, isCleanedUp: boolean } = { cart: [{ id: '', game_id: 0, price: 0, numbers: '', color: '', type: ''  }], savedCart: [], total: 0.00, isCleanedUp: false };
+const initialState: { cart: Bet[], total: number, isCleanedUp: boolean } = { cart: [{ id: '', game_id: 0, price: 0, numbers: '', color: '', type: ''  }], total: 0.00, isCleanedUp: false };
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -16,8 +16,6 @@ const cartSlice = createSlice({
             return
         },
         reset: (state) => {
-            let newArr = state.savedCart.concat(state.cart);
-            state.savedCart = newArr;
             state.cart = initialState.cart;
             state.total = initialState.total;
         },
