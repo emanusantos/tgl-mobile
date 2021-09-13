@@ -153,7 +153,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                         onPress={() => setVisible(!visible)} 
                         name='eye-outline' 
                         size={27} 
-                        color='#C1C1C1' 
+                        color={visible ? '#C1C1C1' : '#B5C401' } 
                         style={{ position: 'absolute', top: 92, right: 20 }} 
                     />
                     <Text 

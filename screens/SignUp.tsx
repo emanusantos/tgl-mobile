@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, NativeSyntheticEvent, NativeTouchEvent, Keyboard } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps, SStyles } from '../types/FormScreenTypes';
@@ -20,6 +20,7 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
     });
     const [modalVisible, setModalVisible] = useState(false);
     const [style, setStyle] = useState<SStyles>({ opacity: 1, elevation: 8 });
+    const [focus, setFocus] = useState<boolean>(false);
 
 
     const submitHandler = (e: NativeSyntheticEvent<NativeTouchEvent>) => {
@@ -90,7 +91,7 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
     };
 
     return (
-        <View style={{...styles.container, opacity: style.opacity}}>
+        <View style={!focus ? {...styles.container, opacity: style.opacity } : styles.keyboardAvoider}>
             <StatusBar style='auto' />
             <Error modalVisible={modalVisible} toggleModal={toggleModal} message={message} />
             <View style={styles.header}>
@@ -98,7 +99,7 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
                 <View style={{ width: 100, height: 7, backgroundColor: '#B5C401', borderRadius: 6 }}></View>
             </View>
             <Text style={{ paddingTop: 35, color: '#707070', fontSize: 35, fontStyle: 'italic', fontWeight: 'bold' }}>Registration</Text>
-            <View style={{...styles.box, elevation: style.elevation}}>
+            <View style={{...styles.box, elevation: style.elevation }}>
                 <TextInput 
                     value={userCredentials.name}
                     placeholder='Name' 
@@ -118,6 +119,8 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
                 />
                 <TextInput 
                     value={userCredentials.password}
+                    onFocus={() => setFocus(true)}
+                    onBlur={() => setFocus(false)}
                     placeholder='Password' 
                     style={styles.input} 
                     secureTextEntry={visible}
@@ -127,7 +130,7 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
                     onPress={() => setVisible(!visible)} 
                     name='eye-outline' 
                     size={27} 
-                    color='#C1C1C1' 
+                    color={visible ? '#C1C1C1' : '#B5C401' }
                     style={{ position: 'absolute', bottom: 100, right: 20 }}
                 />
                 <TouchableOpacity onPress={(e) => submitHandler(e)}>

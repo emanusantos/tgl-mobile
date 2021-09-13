@@ -6,6 +6,13 @@ export const styles = StyleSheet.create({
         backgroundColor: '#F7F7F7',
         alignItems: 'center',
     },
+    keyboardAvoider: {
+        position: 'absolute',
+        justifyContent: 'center',
+        alignItems: 'center',
+        left: 50,
+        bottom: 50
+    },
     img: {
         position: 'absolute',
         zIndex: 10,
