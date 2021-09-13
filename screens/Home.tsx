@@ -23,7 +23,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
 
     useEffect(() => {
         navigation.addListener('focus', () => {
-            memoizate;
+            getBets();
         });
     });
 

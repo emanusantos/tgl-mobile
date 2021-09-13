@@ -3,16 +3,20 @@ import { View, Text, TextInput, TouchableOpacity, NativeSyntheticEvent, NativeTo
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps, SStyles } from '../types/FormScreenTypes';
+import { User } from '../types/BetTypes';
 import { styles } from '../styles/LoginStyleSheet';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import { authSession } from '../store/authSlice';
+import { authSession, setId } from '../store/authSlice';
 import Error from '../components/Error';
+import * as Progress from 'react-native-progress';
 import axios from 'axios';
+
 
 let message: string;
 
 export default function SignUp({ visible, setVisible, setScreen, navigation }: SignUpProps): JSX.Element {
     const dispatch = useAppDispatch();
+    const [loading, setLoading] = useState<boolean>(false);
     const [userCredentials, setUserCredentials] = useState({
         name: '',
         email: '',
@@ -50,13 +54,12 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
             "email": userCredentials.email,
             "password": userCredentials.password
         }).then(res => {
-            message = 'Your account has been created successfully.'
-            toggleModal();
             postAuth();
             resetFields();
         }).catch(err => {
             message = 'Something went wrong creating your account. Please try again later.'
             toggleModal();
+            setLoading(false);
         });
     };
 
@@ -66,10 +69,28 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
             "password": userCredentials.password
         }).then(res => {
             dispatch(authSession(res.data.token));
+            message = 'Your account has been created successfully.'
+            toggleModal();
+            storeUserId();
+            setLoading(false);
             navigation.navigate('HomeTabs');
+            setScreen('Login');
         }).catch(err => {
             alert(err.message);
+            setLoading(false);
         });
+    };
+
+    const storeUserId = async (): Promise<void> => {
+        await axios.get('http://192.168.0.7:3333/users').then(res => {
+            const index = res.data.findIndex((user: User) => user.email === userCredentials.email);
+            const id = res.data[index].id;
+            dispatch(setId(id));
+        }).catch(err => {
+            message = err.message;
+            toggleModal();
+            setLoading(false);
+        })
     };
 
     const resetFields = (): void => {
@@ -90,9 +111,17 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
         }
     };
 
+    if (loading) {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+                <Progress.Circle size={100} color='#B5C401' indeterminate={true} animated={true} />
+            </View>
+        );
+    };
+
     return (
         <View style={!focus ? {...styles.container, opacity: style.opacity } : styles.keyboardAvoider}>
-            <StatusBar style='auto' />
+            {!focus ? <StatusBar style='auto' /> : null}
             <Error modalVisible={modalVisible} toggleModal={toggleModal} message={message} />
             <View style={styles.header}>
                 <Text style={styles.tgl}>TGL</Text>
