@@ -19,6 +19,7 @@ let total = Number(0);
 function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Element {
     const dispatch = useAppDispatch();
     const drawer = useDrawerStatus();
+    const cleaner = useAppSelector(state => state.cart.isCleanedUp);
     const [opacity, setOpacity] = useState<number>(1);
     const [choseNumbers, setChoseNumbers] = useState<number[]>([]);
     const [data, setData] = useState<GameResponse[]>([]);
@@ -44,11 +45,18 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
         if (drawer === 'closed') {
             return setOpacity(1);
         };
-    }, [navigation, drawer]);
+    }, [navigation, drawer, cleaner]);
+
+    useEffect(() => {
+        if (cleaner === true) {
+            navigation.closeDrawer();
+            navigation.navigate('Home');
+        };
+    }, [cleaner]);
 
     const getGames = async (): Promise<void> => {
         try {
-            const url = 'http://10.0.0.103:3333/games';
+            const url = 'http://192.168.0.7:3333/games';
             const games = await fetch(url);
             const gamesJSON = await games.json();
             setData(gamesJSON);
@@ -261,7 +269,7 @@ function NewBet({ navigation }: DrawerScreenProps<RootStackParamList>): JSX.Elem
 };
 
 const NewBetCart = (): JSX.Element => (
-    <cartDrawer.Navigator drawerContent={Cart} screenOptions={{ drawerStyle: { width: '60%', borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }, drawerPosition: 'right', swipeEnabled: false }}>
+    <cartDrawer.Navigator drawerContent={props => <Cart {...props} />} screenOptions={{ drawerStyle: { width: '60%', borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }, drawerPosition: 'right', swipeEnabled: false }}>
         <cartDrawer.Screen name='NewBet' component={NewBet} options={{ headerShown: false, sceneContainerStyle: { opacity: 1 }, overlayColor: 'rgba(0, 0, 0, 0.02)'} } />
     </cartDrawer.Navigator>
 );

@@ -3,17 +3,13 @@ import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-nativ
 import GameDisplay from '../components/GameDisplay';
 import BetButton from '../components/BetButton';
 import { BetResponse, GameResponse } from '../types/BetTypes';
-import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
+import { useAppSelector } from '../hooks/reduxHooks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useIsFocused } from '@react-navigation/native';
 import { RootStackParamList } from '../types/FormScreenTypes';
-import { setId } from '../store/authSlice';
 import axios from 'axios';
 
 export default function Home({ navigation }: NativeStackScreenProps<RootStackParamList, 'Login'>): JSX.Element {
-    const isFocused = useIsFocused();
     const limit = useRef(3);
-    const dispatch = useAppDispatch();
     const token = useAppSelector(state => state.auth.token);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
@@ -29,7 +25,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
 
     const getGames = async (): Promise<void> => {
         try {
-            const url = 'http://10.0.0.103:3333/games';
+            const url = 'http://192.168.0.7:3333/games';
             const games = await fetch(url);
             const gamesJSON = await games.json();
             setGames(gamesJSON);
@@ -39,15 +35,12 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
     };
 
     const getBets = async (): Promise<void> => {
-        await axios.get(`http://10.0.0.103:3333/bets?page=${currentPage}`, {
+        await axios.get(`http://192.168.0.7:3333/bets?page=${currentPage}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         }).then(res => {
             setBets(bets.concat(res.data.data));
-            if (currentPage === 1 && bets.length >= 1) {
-                dispatch(setId(res.data.data[0].user_id));
-            };
             limit.current = res.data.page;
             setLoading(false);
         })

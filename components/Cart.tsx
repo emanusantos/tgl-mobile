@@ -2,14 +2,45 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons, Foundation } from '@expo/vector-icons';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks';
+import { Ionicons } from '@expo/vector-icons';
+import { reset } from '../store/cartSlice';
+import axios from 'axios';
 import CartInfo from './CartInfo';
 import Total from './Total';
-import Save from './Save';
 
-const numbers = '01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03, 01, 02, 03';
 
 export default function Cart({ navigation }: DrawerContentComponentProps): JSX.Element {
-    const navigate = () => {navigation.navigate('Home')};
+    const dispatch = useAppDispatch();
+    const total = useAppSelector(state => state.cart.total);
+    const bets = useAppSelector(state => state.cart.cart);
+    const token = useAppSelector(state => state.auth.token);
+    const [, ...rest] = bets;
+    const postedData = rest.map(({ game_id, numbers }) => ({ game_id, numbers }));
+
+    const postBets = async (): Promise<void> => {
+        await axios.post('http://10.0.0.103:3333/bets', {
+            'betCart': postedData
+        }, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        }).then(res => {
+        }).catch(err => {
+            alert(err);
+        });
+    };
+
+    const handleSave = (): void => {
+        if (total < 30) {
+            return alert("You can't save your cart with less than R$30,00 in bets.");
+        } else {
+            postBets();
+            alert('Your cart was saved successfully. Go to the Home screen to see your newly purchased bets!');
+            navigation.closeDrawer();
+            dispatch(reset());
+        };
+    };
 
     return (
         <View style={{ flex: 1 }}>
@@ -22,7 +53,9 @@ export default function Cart({ navigation }: DrawerContentComponentProps): JSX.E
                 <CartInfo />
             </ScrollView>
             <Total />
-            <Save />
+            <TouchableOpacity onPress={handleSave} style={{ height: 95, backgroundColor: '#EBEBEB', width: '100%', justifyContent: 'center', alignItems: 'center', borderBottomLeftRadius: 13, borderBottomRightRadius: 13 }}>
+                <Text style={{ fontSize: 30, color: '#B5C401', fontWeight: 'bold', fontStyle: 'italic' }}>Save <Ionicons name="arrow-forward-outline" size={30} color='#B5C401' /></Text>
+            </TouchableOpacity>
         </View>
     );
 };

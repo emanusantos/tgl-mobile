@@ -9,7 +9,7 @@ import ResetPassword from './ResetPassword';
 import { Ref, RootStackParamList, SStyles } from '../types/FormScreenTypes';
 import { styles } from '../styles/LoginStyleSheet';
 import axios from 'axios';
-import { authSession } from '../store/authSlice';
+import { authSession, setId } from '../store/authSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import * as Progress from 'react-native-progress';
 
@@ -53,17 +53,28 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     };
    
     const postAuth = async (): Promise<void> => {
-        await axios.post('http://10.0.0.103:3333/sessions', {
+        await axios.post('http://192.168.0.7:3333/sessions', {
             "email": userCredentials.email,
             "password": userCredentials.password
         }).then(res => {
             dispatch(authSession(res.data.token));
+            storeUserId();
             navigation.navigate('HomeTabs');
             setLoading(false);
         }).catch(err => {
             setLoading(false);
             alert('Invalid email/password combination!');
         });
+    };
+
+    const storeUserId = async (): Promise<void> => {
+        await axios.get('http://192.168.0.7:3333/users').then(res => {
+            const index = res.data.findIndex((user: any) => user.email === userCredentials.email);
+            const id = res.data[index].id;
+            dispatch(setId(id));
+        }).catch(err => {
+            alert(err);
+        })
     };
 
     if (loading) {

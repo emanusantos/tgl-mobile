@@ -35,7 +35,7 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
     };
 
     const postData = async (): Promise<void> => {
-        await axios.post('http://10.0.0.103:3333/users', {
+        await axios.post('http://192.168.0.7:3333/users', {
             "name": userCredentials.name,
             "email": userCredentials.email,
             "password": userCredentials.password
@@ -49,7 +49,7 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
     };
 
     const postAuth = async (): Promise<void> => {
-        await axios.post('http://10.0.0.103:3333/sessions', {
+        await axios.post('http://192.168.0.7:3333/sessions', {
             "email": userCredentials.email,
             "password": userCredentials.password
         }).then(res => {
