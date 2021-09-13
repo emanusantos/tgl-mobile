@@ -40,3 +40,14 @@ export interface BetResponse {
     updated_at: string;
     created_at: string;
 };
+
+export type User = {
+    id?: number;
+    name: string;
+    email: string;
+    password?: string;
+    token?: string;
+    token_created_at?: string;
+    created_at?: string;
+    updated_at?: string;
+};

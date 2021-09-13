@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SignUpProps } from '../types/FormScreenTypes';
@@ -16,7 +16,7 @@ export default function SignUp({ stateStyle, visible, setVisible, setScreen, nav
         password: ''
     });
 
-    const submitHandler = (e: any) => {
+    const submitHandler = (e: NativeSyntheticEvent<NativeTouchEvent>) => {
         e.preventDefault();
 
         if (userCredentials.name.length < 3) {

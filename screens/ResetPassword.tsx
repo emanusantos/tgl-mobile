@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { ScreenProps } from '../types/FormScreenTypes';
@@ -9,7 +9,7 @@ import axios from 'axios';
 export default function ResetPassword({ stateStyle, setScreen }: ScreenProps): JSX.Element {
     const [email, setEmail] = useState('');
 
-    const submitHandler = (e: any): void => {
+    const submitHandler = (e: NativeSyntheticEvent<NativeTouchEvent>): void => {
         e.preventDefault();
 
         if (!email.includes('@')) {

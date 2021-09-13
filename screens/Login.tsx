@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import * as Animatable from 'react-native-animatable';
@@ -12,6 +12,7 @@ import axios from 'axios';
 import { authSession, setId } from '../store/authSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import * as Progress from 'react-native-progress';
+import { User } from '../types/BetTypes';
 
 export default function Login({ navigation }: NativeStackScreenProps<RootStackParamList, 'Home'>): JSX.Element {
     const [loading, setLoading] = useState<boolean>(false);
@@ -25,7 +26,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     const [style, setStyle] = useState<SStyles>({ opacity: .5, elevation: 0 });
     const imgRef = useRef<Image & Ref>(null);
 
-    const handleLogin = (event: any) => {
+    const handleLogin = (event: NativeSyntheticEvent<NativeTouchEvent>) => {
         setLoading(true);
         event.preventDefault();
 
@@ -60,6 +61,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
             dispatch(authSession(res.data.token));
             storeUserId();
             navigation.navigate('HomeTabs');
+            reset();
             setLoading(false);
         }).catch(err => {
             setLoading(false);
@@ -69,12 +71,16 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
 
     const storeUserId = async (): Promise<void> => {
         await axios.get('http://192.168.0.7:3333/users').then(res => {
-            const index = res.data.findIndex((user: any) => user.email === userCredentials.email);
+            const index = res.data.findIndex((user: User) => user.email === userCredentials.email);
             const id = res.data[index].id;
             dispatch(setId(id));
         }).catch(err => {
             alert(err);
         })
+    };
+
+    const reset = () => {
+        setUserCredentials({ email: '', password: '' });
     };
 
     if (loading) {
@@ -128,8 +134,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                     />
                     <Text 
                         style={{ marginLeft: 100, color: '#C1C1C1', padding: 20, fontStyle: 'italic' }} 
-                        onPress={() => 
-                        setScreen('ResetPassword')}
+                        onPress={() => setScreen('ResetPassword')}
                     >
                         I forget my password
                     </Text>

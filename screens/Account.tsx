@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from '../hooks/reduxHooks';
+import { User } from '../types/BetTypes';
 import axios from 'axios';
 
 export default function Account(): JSX.Element {
@@ -12,9 +13,12 @@ export default function Account(): JSX.Element {
         name: '',
         email: ''
     });
-    const [user, setUser] = useState<any>({});
+    const [user, setUser] = useState<User>({
+        name: '',
+        email: ''
+    });
 
-    const getUser = async () => {
+    const getUser = async (): Promise<void> => {
         await axios.get(`http://192.168.0.7:3333/users/${userId}`)
         .then(res => {
             setUser(res.data);
@@ -56,7 +60,7 @@ export default function Account(): JSX.Element {
         })
     };
 
-    const handleEmailSubmit = () => {
+    const handleEmailSubmit = (): void => {
         if (!userCredentials.email.includes('@')) {
             return alert('Please enter a valid email.')
         };
@@ -64,7 +68,7 @@ export default function Account(): JSX.Element {
         editUserEmail();
     };
 
-    const handleNameSubmit = () => {
+    const handleNameSubmit = (): void => {
         if (userCredentials.name.length < 3) {
             return alert('Please enter a valid name.')
         };
