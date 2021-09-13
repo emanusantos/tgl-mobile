@@ -104,7 +104,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
     if (loading) {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
-                <Progress.Circle size={150} color='#B5C401' indeterminate={true} animated={true} />
+                <Progress.Circle size={100} color='#B5C401' indeterminate={true} animated={true} />
             </View>
         );
     };
@@ -153,7 +153,7 @@ export default function Login({ navigation }: NativeStackScreenProps<RootStackPa
                         onPress={() => setVisible(!visible)} 
                         name='eye-outline' 
                         size={27} 
-                        color={visible ? '#C1C1C1' : '#B5C401' } 
+                        color={visible ? '#C1C1C1' : '#B5C401' }
                         style={{ position: 'absolute', top: 92, right: 20 }} 
                     />
                     <Text 

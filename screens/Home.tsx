@@ -29,7 +29,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
 
     const [games, setGames] = useState<GameResponse[]>([]);
     const [bets, setBets] = useState<BetResponse[]>([]);
-    const [filters, setFilters] = useState<string | null>(null);
+    const [filters, setFilters] = useState<string[]>([]);
 
     const getGames = async (): Promise<void> => {
         try {
@@ -63,11 +63,12 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
     };
 
     const filterHandler = (type: string): void => {
-        if (filters === type) {
-            return setFilters(null);
+        if (filters.includes(type)) {
+            const newArr = filters.filter((types: string) => types !== type);
+            return setFilters(newArr);
         };
 
-        setFilters(type);
+        setFilters([...filters, type]);
     };
 
     const moreBets = (): void => {
@@ -78,7 +79,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
         return setCurrentPage(currentPage + 1);
     };
 
-    const filteredData = bets.filter((bet: BetResponse) => bet.game.type === filters);
+    const filteredData = bets.filter((bet: BetResponse) => filters.includes(bet.game.type) ? bet.game.type : null);
 
     const Footer = () => {
         return (
@@ -111,12 +112,20 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
                     let color = button.color;
                     let bgc = '#fff';
                     let border = color;
-                    if (filters === button.type) {
+                    let hasClose = false;
+                    if (filters.includes(button.type)) {
+                        hasClose = true;
                         bgc = color;
                         color = '#fff';
                     };
                     return (
-                        <BetButton color={color} bgc={bgc} border={border} key={button.type} type={button.type} onPress={() => filterHandler(button.type)} />
+                        <BetButton 
+                        color={color} 
+                        bgc={bgc} 
+                        border={border} 
+                        key={button.type} 
+                        type={button.type} 
+                        onPress={() => filterHandler(button.type)} hasClose={hasClose} />
                     );
                 })}
             </View>
@@ -126,7 +135,7 @@ export default function Home({ navigation }: NativeStackScreenProps<RootStackPar
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(bet, index) => index.toString()}
                 style={{ marginTop: 20 }} 
-                data={filters ? filteredData : bets} 
+                data={filteredData.length === 0 ? bets : filteredData}
                 ListFooterComponent={Footer}
                 onEndReached={moreBets}
                 onEndReachedThreshold={0.5}
