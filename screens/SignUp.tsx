@@ -45,6 +45,7 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
             return toggleModal();
         };
 
+        setLoading(true);
         postData();
     };
 
@@ -69,8 +70,6 @@ export default function SignUp({ visible, setVisible, setScreen, navigation }: S
             "password": userCredentials.password
         }).then(res => {
             dispatch(authSession(res.data.token));
-            message = 'Your account has been created successfully.'
-            toggleModal();
             storeUserId();
             setLoading(false);
             navigation.navigate('HomeTabs');

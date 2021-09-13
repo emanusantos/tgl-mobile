@@ -28,11 +28,13 @@ export default function ResetPassword({ setScreen }: ScreenProps): JSX.Element {
     const recovery = async (): Promise<void> => {
         await axios.post('http://192.168.0.7:3333/passwords', {
             "email": email,
-            "redirect_url": 'http://192.168.0.7:3333/recover'
+            "redirect_url": "http://meusistema.com/recover"
         }).then(res => {
             message = 'An recovery token was sent to your email.'
             toggleModal();
         }).catch(err => {
+            alert(err.message);
+            return
             message = 'Something went wrong with your recovery.'
             toggleModal();
         });
